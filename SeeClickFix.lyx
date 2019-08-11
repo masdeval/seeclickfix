@@ -162,16 +162,17 @@ City maintenance is laborious and expensive.
  that those should be solved first.
  This, in turn, constitutes important information to help organizing logistics,
  allocate resources, and fulfill citizens' well-being feeling.
- In this work we propose to estimate the urgency of an issue based on its
- textual description.
- Our experiments use sequence learning algorithms over the SeeClickFix hackathon
- data and compare the results with previous different approaches using the
- same data.
+ The problem is that may take time until collecting enough votes to be able
+ to estimate the urgency of an issue.
+ In this work we propose to estimate the number of votes an issue will receive
+ using machine learning techniques.
+ As the number of votes is a proxy to the urgency, we hope to improve city
+ maintenance by providing in advance sensitive information.
  
 \end_layout
 
 \begin_layout Keywords
-crowdsourcing, government 2.0, web 2.0, natural language processing
+crowdsourcing, government 2.0, web 2.0, machine learning 
 \end_layout
 
 \begin_layout Section
@@ -215,21 +216,25 @@ City maintenance is expensive, since it involves monitoring and fixing a
  However, these same urban centers are full of people armed with their GPS
  enabled cell phones, and represent an important asset to help fine-grained
  monitoring capabilities.
- Civic engagement platforms, such as See-Click-Fix, allow citizens to report
- urban issues by entering, besides GPS location and other things, free text
- describing what needs to be done, fixed or changed.
- Thus, municipality’s resources can be redirected to effectively fixing
- the reported issues.
+ Civic engagement platforms, such as See-Click-Fix.com, allow citizens to
+ report urban issues by entering, for instance, GPS location and free text
+ describing the problem.
+ Having this information, in turn, helps municipalities to reduce costs
+ and improve logistics by better allocating resources.
 \end_layout
 
 \begin_layout Standard
-An important aspect in this participatory civil policy-making, is how to
- rank the problems and, ultimately, assert the will of the majority.
- Each issue posted is subject to the vote of other participants.
+Another important aspect in city maintenance, is how to rank the problems.
+ As the resources are limited, most of the time would not be possible to
+ fix all the open issues.
+ Thus, it is necessary to have a way to measure which ones are more important.
+ In the same crowdsourcing platforms, the importance of an issue can be
+ endorsed via votes, meaning that the number of votes can act as a proxy
+ to the urgency of an issue.
  Therefore, a rank of issues can be built based on those votes.
  While the number of votes an issue receives ultimately reflects its urgency
  to be solved, acquiring a significant number of votes may take several
- days or weeks, leading to ineffective and late responses.
+ days or weeks, leading to ineffectiveness and late responses.
  In order to become more responsive and better meet the needs and concerns
  of the citizens, government officials must be able to prioritize more urgent
  issues as soon as possible.
@@ -237,10 +242,15 @@ An important aspect in this participatory civil policy-making, is how to
 \end_layout
 
 \begin_layout Standard
-In this work, we use the number of votes an issue receive as a proxy to
- its urgency, and try to predict it using machine learning techniques.
+In this work, we evaluate machine learning techniques to predict the number
+ of votes an issue will receive.
+ More specifically, we evaluate Ridge Regression, Support Vector Machine
+ (SVM), and Long Short Term Memory (LSTM) algorithms.
  We hope to demonstrate the feasibility of this approach, and help to contribute
  in modernizing an important aspect of public administration.
+ This wok is organized as follows: next we expose more details about the
+ problem and the data, then we describe the experiment and show the results,
+ and finally we address our final considerations.
  
 \end_layout
 
@@ -263,20 +273,33 @@ Our experiments use the [SeeClickFix] hackathon data, comprising 34 Mb of
 
 \begin_layout Standard
 Table 1 shows a description of the data.
- There are eleven attributes which some of them having a high rate of missing
- values.
- Figure 1, 2, and 3 show the distribution of the records among issue categories.
- Issues related to trash, trees and potholes correspond to more than 50%
- of all issues, whereas issues related to lost and found items, or to public
- art, are rarely reported by citizens.
- Figures 1 and 2 show the absolute number of reports and votes grouped by
- issue type.
- Not always the most frequent issue is the most voted one.
- Figure 3 gives an insight about the urgency of an issue by computing the
- ratio votes:occurrences.
+ There are eleven attributes, being five of them (in bold) used as predictors,
+ and 
+\emph on
+num_votes
+\emph default
+ as the target variable.
+ Figure 1, 2, and 3 show the distribution of the records among issue categories
+ (only 24% of the data).
+ In Figure 1 we can see that issues related to trash, trees and potholes
+ correspond to more than 50% of all issues, whereas issues related to lost
+ and found items, or to public art, are rarely reported by citizens.
+ Issues reported more frequently have higher absolute number of votes.
+ But this absolute number is not very useful.
+ Figure 2 gives an insight about the urgency of an issue by computing the
+ average of votes by category.
  We can see that issues like drug dealing and public concern, although rare,
- receive lots of votes when occur, revealing the natural concern citizens
- have about them.
+ receive many votes when occur, revealing the natural concern citizens have
+ about them.
+ Finally, Figure 3 shows that more than 70% of the reported issues have
+ only one vote.
+ For a crowdsourcing platform, this is not very encouraging, and we may
+ expect that the data may not be very meaningful once there is that little
+ variability in 
+\emph on
+num_votes
+\emph default
+.
  
 \end_layout
 
@@ -287,10 +310,10 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="12" columns="5">
+<lyxtabular version="3" rows="12" columns="4">
 <features tabularvalignment="middle">
-<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -329,22 +352,13 @@ Type
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 
 \series bold
 % Missing Values
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
 \end_layout
 
 \end_inset
@@ -378,20 +392,11 @@ Numeric
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -402,7 +407,11 @@ Numeric
 \begin_inset Text
 
 \begin_layout Plain Layout
-latitude 
+
+\series bold
+latitude
+\series default
+ 
 \end_layout
 
 \end_inset
@@ -425,20 +434,11 @@ Numeric
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -449,6 +449,8 @@ Numeric
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 longitude
 \end_layout
 
@@ -472,20 +474,11 @@ Numeric
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -496,6 +489,8 @@ Numeric
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 summary
 \end_layout
 
@@ -519,20 +514,11 @@ Text
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -543,6 +529,8 @@ Text
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 description
 \end_layout
 
@@ -566,20 +554,11 @@ Text
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-52
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+52
 \end_layout
 
 \end_inset
@@ -590,7 +569,9 @@ Text
 \begin_inset Text
 
 \begin_layout Plain Layout
-num_votes
+
+\series bold
+date
 \end_layout
 
 \end_inset
@@ -599,7 +580,7 @@ num_votes
 \begin_inset Text
 
 \begin_layout Plain Layout
-number of user votes
+yyyy-mm-dd HH:mm:ss 
 \end_layout
 
 \end_inset
@@ -608,16 +589,7 @@ number of user votes
 \begin_inset Text
 
 \begin_layout Plain Layout
-Numeric
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
+Timestamp
 \end_layout
 
 \end_inset
@@ -626,7 +598,7 @@ Numeric
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -660,20 +632,11 @@ Numeric
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -707,20 +670,11 @@ Numeric
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0
 \end_layout
 
 \end_inset
@@ -754,7 +708,7 @@ Categorical
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -763,65 +717,9 @@ Categorical
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-created_time 
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-time the issue originated
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Timestamp
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -830,7 +728,7 @@ tag_type
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -839,7 +737,7 @@ type of issue
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -848,7 +746,7 @@ Categorical
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -857,11 +755,42 @@ Categorical
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 
+\series bold
+num_votes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+number of user votes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
 \end_layout
 
 \end_inset
@@ -902,10 +831,11 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename examples_per_issue_category.png
+	filename frequency_issue_type.png
 	lyxscale 80
-	scale 80
+	scale 60
 
 \end_inset
 
@@ -916,7 +846,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Total number of records per issue category
+Frequency of issue category.
 \end_layout
 
 \end_inset
@@ -940,48 +870,11 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset Graphics
-	filename votes_per_issue_category.png
-	lyxscale 80
-	scale 80
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Total number of votes per issue category
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename ratio_votes_issue_category.png
 	lyxscale 80
-	scale 80
+	scale 60
 
 \end_inset
 
@@ -992,7 +885,42 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Ratio between number of votes and number of issues
+Average number of votes by issue type.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename frequency_num_votes.png
+	lyxscale 80
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Frequency of votes.
 \end_layout
 
 \end_inset
@@ -1012,7 +940,7 @@ Ratio between number of votes and number of issues
 \begin_layout Standard
 Another important statistic is the length of the summary and description
  fields.
- This has influence in how to set the parameters of our model and are depicted
+ This has influence in how to set the parameters of our models and are depicted
  in Table 2.
  The average number of words for summary are 6.4 words, and for description
  are 13 words.
@@ -1026,6 +954,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="4">
 <features tabularvalignment="middle">
@@ -1166,7 +1095,7 @@ Description
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Statistics of summary and description
+Statistics of the summary and description fields
 \end_layout
 
 \end_inset
@@ -1202,639 +1131,283 @@ where p and a are arrays of shape (num_samples, num_targets).
 \end_layout
 
 \begin_layout Standard
-As we addressed before, our main goal is to help in estimating the future
- urgency of a reported issue by predicting num_votes.
- As we are curious to compare our results with previous work on the same
- data, we will stick with the same evaluation metric, and we seek to find
- reported accuracy for num_votes individually.
+As we mentioned before, our main goal is to help in estimating the urgency
+ of a reported issue by predicting num_votes.
+ Therefore, in this work, we concentrate in just predicting it.
+ As evaluation metric we use the Mean Squared Error (MSE), which evaluates
+ how close are 
+\emph on
+p
+\emph default
+ and 
+\emph on
+a
+\emph default
+, the predicted and the true value.
+ The MSE formula is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+MSE=\frac{1}{n}\sum(p_{i}-a_{i})^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the next section we discuss in more detail our experiments.
+ We make a brief description of the algorithms and features we use, and
+ also show the MSE issued by each of them.
  
 \end_layout
 
 \begin_layout Section
-Related Work
-\end_layout
-
-\begin_layout Section
-The Experiment
+Experiment and results
 \end_layout
 
 \begin_layout Standard
-The objective of this work is to compare the performance of two machine
- learning algorithms - Maximum Entropy and Support Vector Machine - in predictin
-g the overall sentiment implicit in tweets using word vectors as features.
- The baseline is a Maximum Entropy model trained over a unigram and bigram
- set of bag-of-words features.
- The following sections depict some of these concepts and detail the whole
- experiment.
- 
-\end_layout
-
-\begin_layout Subsection
-Dataset
-\end_layout
-
-\begin_layout Standard
-We carefully selected a set of publicly available datasets to use in the
- experiment.
- Our main concern in this regards was in to find reliable datasets for training
- the classification algorithms.
- As we have not found one single large high quality file, our final dataset
- is a concatenation of five human annotated datasets.
- In resume, our datasets scheme is: 
+In order to evaluate the feasibility of our proposal, we test our hypothesis
+ using four different supervised machine learning algorithms designed to
+ solve regression problems.
+ The overall methodology for the experiment can be summarized by the following
+ points:
 \end_layout
 
 \begin_layout Itemize
-A set of 1.6 million tweets to be used in the creation of our custom embedding.
- It is known as Stanford Twitter Sentiment or Sentiment140 and was created
- by Alec Go, Richa Bhayani, and Lei Huang, who were Computer Science graduate
- students at Stanford University 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "AlecGo2009"
-literal "false"
+Extract suitable features: the features we use to train our models are descripti
+on, summary, date and location (latitude and longitude).
+ We divide the experiment in two parts: 
+\end_layout
 
-\end_inset
-
-.
- The sentiment of each tweet is automatically labeled (positive or negative)
- as opposed as having humans manual annotate.
- We considered that for the task of creating the embedding, in which the
- importance is having a large corpus that can represent the idiosyncrasies
- of some domain, it would be useful, but we do not rely on it to train and
- test the classifiers as automatic sentiment annotation of tweets using
- emoticons has an arguable accuracy.
+\begin_deeper
+\begin_layout Itemize
+Part A: using only the textual features: summary and description.
  
 \end_layout
 
 \begin_layout Itemize
-For training we select only hand annotated datasets from five different
- sources, four of them listed in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "oro40660"
-literal "false"
+Part B: using all four features: summary, description, source and location.
+\end_layout
 
-\end_inset
+\begin_layout Standard
+We do that because we want to evaluate how well the models will perform
+ using only these two attributes.
+ We make the assumption that textual description features will always be
+ present.
+ Having both results separately helps to find which model is better in a
+ more general scenario.
+ 
+\end_layout
 
-, and one from 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Tromp:2011:SMS:2117693.2119570"
-literal "false"
+\end_deeper
+\begin_layout Itemize
+Configure the parameters and train the models using a training set.
+\end_layout
 
-\end_inset
-
-.
+\begin_layout Itemize
+Test the performance of the model in a test set.
  
 \end_layout
 
 \begin_layout Standard
-Table 1 displays the distribution of tweets in the five selected datasets
- according to their sentiment labels.
- We can note that in the end we get a balanced dataset of 40000 examples
- of binary human labeled tweets sentiments.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-placement h
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Overview of the manually labeled datasets
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Tabular
-<lyxtabular version="3" rows="7" columns="5">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Dataset
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-#tweets
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-#positives
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-#neutral
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-#negative
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-HCR
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-2516
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-541
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-470
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1381
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Sanders
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-5513
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-570
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-2503
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-654
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-SemEval
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-34183
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-15543
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-6440
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-12290
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-OMD
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-3238
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-710
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1196
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Tromp
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-11778
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-3458
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-4706
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-3614
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-57228
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-20732
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-14119
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-19135
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
+This section is organized as follows: first we describe in more details
+ how we use the selected features, then we make a brief description of each
+ algorithm used, and finally we present the results obtained for Part A
+ and B.
+ 
 \end_layout
 
 \begin_layout Subsection
-Featute Extraction
+Feature Extraction
 \end_layout
 
 \begin_layout Standard
-In this section we show an overview of the feature representation techniques
- we use for the different models.
+One important matter in using supervised learning algorithms is to have
+ data in a suitable form to feed them.
+ The task of transform the raw data in features is called feature extraction
+ and some of the representation techniques we use are:
 \end_layout
 
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{itemize}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-item Bog-of-words (BOW): This is the most common approach to extract features
+\begin_layout Itemize
+Bag-of-words (BOW): This is the most common approach to extract features
  from text.
- The idea is to represent each doument as a (sparse) vector where each cell
- counts the number of times a particular word has occured in the text.
+ The idea is to represent each document as a (sparse) vector where each
+ cell counts the number of times a particular word has occurred in the text.
  BOW does not consider the order of words and it is often used with n-gram
- model.
- Just counting the number of times a word occured usualy is not enough because
- these raw frequences do not correspond to the actual importance of the
- word.
- To overcome this issue, the frequencies are weighted using the TF-IDF scheme.
- TF-IDF helps to find more discriminative words in a corpus.
- It depends on the frequency of a word in a document and its frequency in
- all the corpora.
- TF-IDF is calculated as follows:
+ models.
+ 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Itemize
+Word Semantic Vectors: word vectors, Word2Vec, word embedding are all designatio
+ns of how has been known the recent supervised learning technique to learn
+ distributed representation of words 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Mikolov:2013:DRW:2999792.2999959"
+literal "false"
 
+\end_inset
 
-\backslash
-begin{equation} 
-\backslash
-nonumber tf
-\backslash
-textit{-}idf(t,d,D)= tf(t,d) 
-\backslash
-times idf(t) 
-\backslash
-end{equation} 
-\backslash
-begin{equation} 
-\backslash
-nonumber idf(t)= 
-\backslash
-log {
-\backslash
-frac{n_d}{1+df(d,t)}} 
-\backslash
-end{equation}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-item Word Semantic Vectors: word vectors, Word2Vec, word embedding are all
- designations of how has been known the recent supervised learning technique
- to learn distributed represenation of words 
-\backslash
-cite{Mikolov:2013:DRW:2999792.2999959}.
- The skip-gram with negative sampling model encompasses the following ideas:
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{itemize}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-item Given an input word, training a two layer neural network to predict
- the probability of all other words in the vocabulary be in the vicinity
- of this word.
- The input layer is a one-hot vector with the size of the vocabulary and
- a one in the position of the input word and zero in every other position.
- The hidden layer has 300 neurons with a identity transfer function, and
- the output is a softmax layer also with the size of the vocabulary.
- Given a window size which defines the vicinity, for every sentence in the
- corpus where the input word occurs, a randomely chosen output word is selected
- from the vicinity.
- This will be the target label for this trail which means that the neural
- net will learn that the input and output words are somehow related and
- not all the others.
- A scheme of this can be seen in Figure~
-\backslash
-ref{fig:skip_gram_network} 
-\backslash
-footnote{From McCormick, C.
- (2016, April 19).
- Word2Vec Tutorial - The Skip-Gram Model.
- Retrieved from http://www.mccormickml.com}.
+.
+ The main idea of the skip-gram with negative sampling algorithm is to train
+ a two layer neural network to predict the probability of all other words
+ in the vocabulary be in the vicinity of this word.
  At the end of the training, the hidden layer will be the word vector because
- one way for the network to output similar context predictions for these
- two words is if the word vectors are similar.
+ one way for the network to output similar context predictions is if the
+ word vectors are similar.
  So, if two words have similar contexts, then the network is motivated to
  learn similar word vectors for these two words.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
+The transformations we apply on the features are:
+\end_layout
 
+\begin_layout Itemize
+prediction and summary: to use with Ridge and SVM, transform to a BOW representa
+tion with 5000 words vocabulary size and pruning words that occur in more
+ than 50% of the documents.
+ To use with LSTM we convert each word in a 200 dimensional word embedding.
+ Fill with a blank character whenever it is null.
+\end_layout
 
-\backslash
-item From the previous explanation is easy to infer that this neural network
- has a huge number of parameters because it is defined in function of the
- size of the vocabulary.
- Occurs that very frequent words, like 
+\begin_layout Itemize
+date: split in hour, day of week, year, and transform in its one-hot encoding
+ representation.
+\end_layout
+
+\begin_layout Itemize
+location: as they are latitude and longitude values represented as decimal
+ degrees, round to three decimal places which corresponds to neighborhood
+ precision.
+ Apply one-hot encoding conversion.
+ 
+\end_layout
+
+\begin_layout Itemize
+log transform 
+\emph on
+num_votes
+\emph default
+ for the linear models.
+\end_layout
+
+\begin_layout Subsection
+Algorithms
+\end_layout
+
+\begin_layout Standard
+Follow a brief description of the algorithms we use: 
+\end_layout
+
+\begin_layout Itemize
+Ridge regression: is a variant of the Ordinary Least Square that applies
+ a penalty to the loss function in order to prevent from overfitting.
+ This is achieved by adding an extra term to the loss that is a squared
+ sum of the weights.
+ This stimulates the optimization procedure to shrink the weights parameters
+ (but not zeroing them).
+ It is also known as L2 regularization.
+ 
+\end_layout
+
+\begin_layout Itemize
+Support Vector Machines (SVM): is a flexible and powerful algorithm based
+ on the idea of 
 \begin_inset Quotes eld
 \end_inset
 
-the
+large margin
 \begin_inset Quotes erd
 \end_inset
 
-, do not bring useful information about the context and just overload the
- learning proccess.
- Word2Vec implements a subsampling mechanism to address this issue, and
- prune those words from the training.
- This helps in improving the quality of the representations and decrease
- the computanional cost.
+.
+ It builds hyperplanes which can be used for classification or regression.
+ These hyperplanes are built in such a way to preserve the larger distance
+ possible between the samples contained in the two sides being separated.
+ This in turn implies in lower generalization error.
+ SVM is essentially a linear model.
+ However, it can be extended to non-linear boundaries by using different
+ kernels which implicitly transform the original features using non linear
+ functions.
+ 
+\end_layout
+
+\begin_layout Itemize
+Long Short Term Memory: is a class of neural models designed to tackle sequence
+ like problems, i.e., problems where past information is relevant to compute
+ actual outcomes.
+ Among common problems defined as sequential are speech recognition, time
+ series analysis, and neural language models.
+ LSTM is an improved version of a simpler neural model called Recurrent
+ Neural Network (RNN), Figure 4 left of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jurafsky:2000:SLP:555733"
+literal "false"
+
+\end_inset
+
+.
+ They share the idea of having a time component, a memory, to enable them
+ to take into account history of information.
+ LSTM is more robust and complex and is the 
+\emph on
+de facto
+\emph default
+ solution as it allows to process and learn from longer sequences by solving
+ many RNN limitations.
+ The main drawback of simple RNN is that it uses a single matrix of weights
+ (the memory component) to compute actual predictions and also to accumulate
+ past information.
+ Another problem related to neural models in general is the vanishing or
+ exploding gradients, an intrinsic effect associated with the way these
+ models learn and that is leveraged in sequence-like problems as the sequences
+ trend to be lengthy.
+ LSTM tackle these issues using an intricate mechanism of gates to control
+ the extent to which a new value flows into a LSTM unit (input gate), the
+ extent to which a value remains in the unit (forget gate), and the extent
+ to which a value in the unit is used to compute its output (output gate).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Unroled_RNN.png
+	lyxscale 20
+	scale 30
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename bidirectional_RNN.png
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Plain Layout
-
-
-\backslash
-item The 300 hidden neurons are fully conected with the vocabulary size
- output layer, which means update a huge number of weights in a billions
- of training examples.
- Negative sampling addresses this by having each training sample only modifying
- a small percentage of the weights, rather than all of them.
- Besides the weights of the output word, instead of update all the others,
- the method randomly select just a small number of negative words to update
- the weights.
- Thus, a negative word is one for which we want the network output a 0.
- This reduce the cost for training drastically.
-\end_layout
+\begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
-
-\backslash
-end{itemize}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{itemize}
+Left: An schematic view of a simple recurrent neural network shown unrolled
+ in time.
+ Right: A bidirectional RNN.
+ 
 \end_layout
 
 \end_inset
@@ -1842,50 +1415,71 @@ end{itemize}
 
 \end_layout
 
-\begin_layout Standard
-To create our custom word embedding, we use the Gensim package.
- We choose 200 for the size of the vector and use five words as the window,
- given that, in average, a tweet has 50 words.
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Bidirectional LSTM: Figure 4 right shows a scheme of a bidirectional RNN.
+ In a regular RNN (or LSTM) at each step in time the network learned everything
+ about the sequence up to that point.
+ We say that the model is taking into account the context in its left.
+ For many problems, however, we have access to the entire sequence beforehand.
+ It turns out that it is also valuable and possible to keep track of the
+ context in the right as well.
+ Then, the network can combine both contexts and, as a result, modeling
+ a better representation of the data.
+ This is accomplished by a bidirectional RNN which process the input sequence
+ from the start to the end, and also in reverse, terribly capturing left
+ and right contexts into a single representation.
+ There are different architectures in which we can use Recurrent Neural
+ Networks.
+ For our proposal, we are using a Many to One design, which means we have
+ as input a sequence and as output a single value.
+ This scheme is depicted in Figure 5 (
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jurafsky:2000:SLP:555733"
+literal "false"
+
+\end_inset
+
+).
  
 \end_layout
 
 \begin_layout Standard
-We also test using pre-trained word vectors from the Glove
-\begin_inset Foot
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-https://nlp.stanford.edu/projects/glove/
+\begin_inset Graphics
+	filename Bi-RNN.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A bidirectional RNN for sequence classification.
 \end_layout
 
 \end_inset
 
- project.
- Specifically, we use their 200 size word vectors trained on a Twitter corpus
- encompassing 2 billions tweets, 27 billions tokens, and 1.2 millions words
- vocabulary size.
- 
-\end_layout
 
-\begin_layout Standard
-\begin_inset ERT
-status open
+\end_layout
 
 \begin_layout Plain Layout
 
-
-\backslash
-begin{figure}[h]
-\backslash
-centering
-\backslash
-includegraphics[width=4.5in]{skip_gram_network}
-\backslash
-caption{Skip-gram network.} 
-\backslash
-label{fig:skip_gram_network} 
-\backslash
-end{figure}
 \end_layout
 
 \end_inset
@@ -1894,158 +1488,55 @@ end{figure}
 \end_layout
 
 \begin_layout Subsection
-Classifiers
+Experiments and results
 \end_layout
 
 \begin_layout Standard
-Follow a brief description of the algorithms we are using to fit a classificatio
-n model.
+In this section we describe the experiment and the result for each one of
+ the algorithms experimented.
+ The experiment is divided in two parts as we want to assess the feasibility
+ of this approach in a more general setting.
+ Therefore, Part A addresses only textual features describing the problem.
+ We are assuming that a textual description of the issue is common among
+ different crowndsourcing platforms.
+ In Part B we also use location and date as features, as they are available
+ in SeeClickFix.com data.
+\end_layout
+
+\begin_layout Standard
+However, before we start, as we intend to use linear models to fit the data,
+ we first test whether the data has a linear relationship.
+ The graphs in Figure 6 show scatter plots of the residuals and the predicted
+ values.
+ Such graph can be used to detect if the assumption of linearity holds.
+ On the left hand side we see the plot over the original data which has
+ a R-squared of 0.52.
+ The red line is not perfectly aligned what might mean a non-linear relation.
+ To correct this, we then apply a log transformation on the target variable.
+ The new plot on the right has a better fit and a R-squared of 0.673.
  
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{itemize}
-\backslash
-item{
-\backslash
-bf Support Vector Machines (SVM):} This algorithm finds a hyperplane that
- separates comments  according to the opinion expressed in them.
- The separation, or margin, is as large as possible.
- The algorithm returns a decision function $h(d)$, so that the probability
- of an opinion $s$ given a comment $d$ is given as:  
-\backslash
-begin{equation} 
-\backslash
-nonumber p(s|d)=
-\backslash
-displaystyle
-\backslash
-frac{1}{1+e^{ah(d)+b}}.
- 
-\backslash
-end{equation} 
-\backslash
-noindent where $a$ and $b$ are estimated by minimizing the negative log-likeliho
-od function in $
-\backslash
-mathcal{D}$.
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-item{
-\backslash
-bf Maximum Entropy (MaxEnt):} This is one of the most used models in a wide
- range of applications.
- MaxEnt follows this equation to find the probability of the output, given
- a certain input: 
-\backslash
-begin{equation} P_{ME}(c|d,
-\backslash
-lambda ) = 
-\backslash
-frac{
-\backslash
-exp 
-\backslash
-left[ 
-\backslash
-sum _i{
-\backslash
-lambda _if_i(c,d)} 
-\backslash
-right] }{
-\backslash
-sum _{
-\backslash
-prime {c}}
-\backslash
-left[ 
-\backslash
-exp 
-\backslash
-sum _i{
-\backslash
-lambda _if_i(c,d)} 
-\backslash
-right] } 
-\backslash
-end{equation} 
-\backslash
-end{itemize}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Experiments
-\end_layout
-
-\begin_layout Standard
-We employ a 5-fold cross-validation for training the classifiers, and report
- the overall accuracy and F1-score of the test.
- Our main experiment is designed in the following way:
-\end_layout
-
-\begin_layout Itemize
-Training a logistic regression model as baseline using unigram and bigram
- bag-of-words features.
-\end_layout
-
-\begin_layout Itemize
-Creating a custom 200 size word vectors from a 1.6 million tweets with a
- window of five words.
- Removed punctuation.
- 
-\end_layout
-
-\begin_layout Itemize
-Classification using a 5-fold cross-validation training using custom word
- vectors.
- Removed punctuation with Gensin tokenizer.
- 
-\end_layout
-
-\begin_layout Itemize
-Classification using a 5-fold cross-validation training using Glove word
- vectors.
- Preprocessing with Stanford script (kept punctuation).
- 
-\end_layout
-
-\begin_layout Section
-Results
-\end_layout
-
-\begin_layout Standard
-The results of our 5-fold test are shown in Table 2.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-placement h
+\begin_inset Float figure
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset Caption Standard
+\align center
+\begin_inset Graphics
+	filename residualxpredicted.png
+	lyxscale 50
+	scale 50
 
-\begin_layout Plain Layout
-Accuracy and F1-score
-\end_layout
+\end_inset
+
+
+\begin_inset Graphics
+	filename residualxpredicted_.png
+	lyxscale 50
+	scale 50
 
 \end_inset
 
@@ -2053,9 +1544,62 @@ Accuracy and F1-score
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Diagnostic Plots
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These results suggest that a non-linear transformation of the target variable
+ leads to a better linear model, therefore our experiments are conducted
+ applying a log-transformation on 
+\emph on
+num_votes
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Now we present the results for different scenarios.
+ 
+\end_layout
+
+\begin_layout Standard
+Our first set of results, presented in Table 3, encompass the whole dataset.
+ The table presents, besides the error term, also the R-squared associated
+ with the linear models.
+ The R-squared, also known as coefficient of determination, is a metric
+ applied to linear models that captures the amount of variance of the target
+ variable explained by the predictors.
+ Thus, for instance, a R-squared of 0.6, means that 60% of the variability
+ of Y is explained by X.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="6" columns="4">
+<lyxtabular version="3" rows="5" columns="5">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -2065,16 +1609,212 @@ Accuracy and F1-score
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 Algorithm
 \end_layout
 
 \end_inset
 </cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part A
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part B
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ridge
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.59
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.60
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.94
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.51
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.93
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.53
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-Feature
+LSTM
 \end_layout
 
 \end_inset
@@ -2083,7 +1823,25 @@ Feature
 \begin_inset Text
 
 \begin_layout Plain Layout
-Acc
+0.90
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2092,373 +1850,7 @@ Acc
 \begin_inset Text
 
 \begin_layout Plain Layout
-F1
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Logistic Regression
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-BOW
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.726
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.775
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Logistic Regression
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Custom Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.762
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.820
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-SVM (C=1,linear)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Custom Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.767
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.823
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Logistic Regression
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Glove Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.783
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.834
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-SVM (C=1,linear)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Glove Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.783
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.834
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The results are almost self-explanatory.
- We can see the advantage of using semantic word vectors in all the scenarios.
- We were expecting a higher accuracy when employing the Glove embeddings
- since they were trained in a much bigger twitter corpus.
- We were also expecting a higher accuracy from SVM but both algorithms have
- the same performance.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-Figure~
-\backslash
-ref{fig:twitter_columbia_results}
-\end_layout
-
-\end_inset
-
- shows that our results are similar as obtained in that work.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{figure}[h]
-\backslash
-centering
-\backslash
-includegraphics[width=4.5in]{twitter_columbia_results}
-\backslash
-caption{Results of paper 
-\backslash
-cite{Agarwal:2011:SAT:2021109.2021114} for a binary classification.} 
-\backslash
-label{fig:twitter_columbia_results} 
-\backslash
-end{figure}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We now show in Table 3 the results for SVM with different kernels in the
- custom word vectors setting.
- Again the regularization parameter C was kept in 1.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float table
-placement h
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-SVM for different kernels.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Tabular
-<lyxtabular version="3" rows="4" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Kernel
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Accuracy
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Linear
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.767
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-RBF
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.726
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Polynomial
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.651
+x
 \end_layout
 
 \end_inset
@@ -2472,6 +1864,14 @@ Polynomial
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results for the complete dataset.
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -2481,38 +1881,21 @@ Polynomial
 \end_layout
 
 \begin_layout Standard
-We can see that the linear kernel gives the best result and was the one
- reported in Table 2.
- Trying to improve the accuracy, we computed the TF-IDF value of each word
- and weighted with the resulting value the embedding representation of the
- word before averaging all of them to get the final tweet vector representation.
- The results are shown in Table 4.
-  
+Baseline: 0.82
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float table
-placement h
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Results using TF-IDF.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="4">
+<lyxtabular version="3" rows="5" columns="5">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -2522,16 +1905,212 @@ Results using TF-IDF.
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 Algorithm
 \end_layout
 
 \end_inset
 </cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part A
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part B
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ridge
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.08
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.15
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.04
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.14
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-Feature
+LSTM
 \end_layout
 
 \end_inset
@@ -2540,7 +2119,25 @@ Feature
 \begin_inset Text
 
 \begin_layout Plain Layout
-Acc
+2.20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2549,159 +2146,7 @@ Acc
 \begin_inset Text
 
 \begin_layout Plain Layout
-F1
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Logistic Regression
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Custom Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.743
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.812
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-SVM (C=1,linear)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Custom Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.747
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.813
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Logistic Regression
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Glove Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.757
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.821
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-SVM (C=1,linear)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Glove Word2Vec
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.758
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-0.822
+x
 \end_layout
 
 \end_inset
@@ -2715,7 +2160,10 @@ Glove Word2Vec
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Caption Standard
 
+\begin_layout Plain Layout
+Results for the baseline dataset.
 \end_layout
 
 \end_inset
@@ -2723,10 +2171,9 @@ Glove Word2Vec
 
 \end_layout
 
-\begin_layout Standard
-We can note that, interestingly enough, employing TF-IDF does not lead to
- a better accuracy.
- 
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2734,25 +2181,38 @@ Conclusion
 \end_layout
 
 \begin_layout Standard
-In this work we evaluated two machine learning algorithms for classifying
- sentiment in tweets messages.
- We used word vectors, which instantiate the linguistic idea of distributional
- semantic, as features for the classifiers, and compare their performance
- with the traditional approach of bag-of-words.
- We used two different sets of word vectors, one that we trained and called
- them custom word vectors, and word vectors from the Glove project.
- To train the classifiers, we carefully concatenated five different manually
- labeled twitter corpus used in previous sentiment classification experiments.
+In this work we use machine learning to leverage city maintenance capabilities.
+ Our hypothesis is that would be possible, with certain degree of accuracy,
+ to estimate the number of votes an issue would receive based on their attribute
+s.
+ The number of votes can be used to estimate urgency and therefore is a
+ useful metric to help in planning and prioritization.
  
 \end_layout
 
 \begin_layout Standard
-For future experiments, we would recommend tests with higher dimensional
- vectors, different classifiers, and ensemble techniques for improving accuracy
- in a similar training approach as used here.
- Also, tests with neural sequence model as Recurrent Neural Networks are
- highly desirable as these models have been issuing the state of the art
- accuracy in many sequence dependent tasks.
+To evaluate our hypothesis we employ different machine learning algorithms
+ with different properties in an attempt to finding the one that suites
+ better to the data and leads to the most accurate prediction.
+ This is a common methodology in data analysis since the ground truth function
+ which generates the data is missing and our goal is to meet an approximation
+ to it.
+ We explore four regularized linear models - Ridge and SVM - and a neural
+ model designed to handle sequence learning problems, LSTM.
+ Linear models are the building blocks of data driven statistical learning
+ due their maturity, interpretability and predictive power.
+ The model that issued the smallest error was the neural one.
+ Neural models are highly flexible and, in this problem, where the main
+ feature are sentences in the English language, our choice of LSTM performed
+ pretty well.
+ 
+\end_layout
+
+\begin_layout Standard
+Based on the results, we conclude that machine learning techniques can indeed
+ be used successfully with crowdsourcing data in a city maintenance setting.
+ The efficiency is attested by the small MSE with a coefficient of determination
+ R-squared around 60%.
  
 \end_layout
 

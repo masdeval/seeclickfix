@@ -150,10 +150,6 @@ def diagnostic_plots(X, y, model_fit=None):
 
 
 
-
-
-
-
 def rmsle(y, y0):
     y = np.array(y)
     y0 = np.array(y0)
@@ -165,54 +161,69 @@ def rmsle_v2(y, y0):
     #return np.sqrt(np.mean(np.square(np.log1p(y) - np.log1p(y0))))
     return np.sqrt(np.square(y  - y0 ).mean())
 
+def mse(pred,y):
+    pred  = np.expm1(pred)
+    y = np.expm1(y)
+    return np.square(pred - y).mean()
 
-rmsle_score = make_scorer(rmsle_v2, greater_is_better=False)
+score = make_scorer(mse, greater_is_better=False)
 
-
+#train total
 train = pd.read_csv('train.csv', sep=',')
+#train = pd.read_csv('./hackathon_data/train.csv', sep=',')
 train['description'].fillna(' ',inplace=True)
+train = train[(train['num_votes'] < 50)]
 #train = train[train['created_time'] > '2013-01-01 00:00:00']
-train = train.dropna(subset=['source'])
+#train = train.dropna(subset=['source'])
 print(train.info())
+
+#train reduced
+#train = train[(train['num_votes'] > 1) & (train['num_votes'] < 50)]
+#print(train.info())
+#print(train.head())
+
+#train baseline
+train_baseline = train[~train['tag_type'].isna()]
+print(train_baseline.info())
+#train = train_baseline
+
 
 #train['location'] = [[x1,x2] for x1,x2 in zip(train['latitude'].apply(lambda x:round(x,3)),train['longitude'].apply(lambda x:round(x,3)))]
 
 ####################################  Baseline ########################################
 # Strategy: for the 24% of the data that has issue_type populated, predict the average num_votes by neighborhood
 
-train_baseline = train[~train['tag_type'].isna()]
-train_baseline['lat_neighbor'] = train_baseline['latitude'].apply(lambda x: round(x,3))
-train_baseline['lon_neighbor'] = train_baseline['longitude'].apply(lambda x: round(x,3))
-votes_avg_issue_type = train_baseline[['tag_type','lat_neighbor','lon_neighbor','num_votes']].groupby(['tag_type','lat_neighbor','lon_neighbor']).mean()
-#print(votes_avg_issue_type)
-
-pred = list()
-
+# train_baseline['lat_neighbor'] = train_baseline['latitude'].apply(lambda x: round(x,3))
+# train_baseline['lon_neighbor'] = train_baseline['longitude'].apply(lambda x: round(x,3))
+# votes_avg_issue_type = train_baseline[['tag_type','lat_neighbor','lon_neighbor','num_votes']].groupby(['tag_type','lat_neighbor','lon_neighbor']).mean()
+# pred = list()
+#
 # for index,sample in train_baseline.iterrows():
 #      pred.append(votes_avg_issue_type.loc[(sample['tag_type'],sample['lat_neighbor'],sample['lon_neighbor']),['num_votes']][0])
-
-# print("\n Baseline RMSLE: %f " % rmsle(pred, train_baseline['num_votes']))
+#
+# #print("\n Baseline RMSLE: %f " % rmsle(pred, train_baseline['num_votes']))
+# print("\n Baseline MSE: %f " % np.mean(np.square(pred - train_baseline['num_votes'])))
 # print("\n")
 
 ########################################################################################
 
-#train = train_baseline
+train['hour'] = [str(pd.to_datetime(x).hour) for x in train['created_time']]
+train['dayofweek'] = [str(pd.to_datetime(x).weekday()) for x in train['created_time']]
+train['year'] = [str(pd.to_datetime(x).year) for x in train['created_time']]
+#print(train.info())
+#print(train.loc[:,['hour','dayofweek','year']])
 
 description = train['description']
 summary = train['summary']
 description = description.apply(lambda x:  ' '.join(gensim.utils.simple_preprocess(x)))
 summary = summary.apply(lambda x:  ' '.join(gensim.utils.simple_preprocess(x)))
-bow = CountVectorizer(max_features=5000, binary=True, max_df=0.5)
+bow = CountVectorizer(max_features=10000, binary=True, max_df=0.5,ngram_range=(1,2))
 #bow = bow.fit(description+summary)
 description = bow.fit_transform(description)
 bow.vocabulary_ = None
 summary = bow.fit_transform(summary)
 
-from sklearn.preprocessing import OneHotEncoder
-dummies = OneHotEncoder(handle_unknown='ignore')
-source = dummies.fit_transform(np.array(train[['source']]).reshape(-1,1))
 #source = dummies.fit_transform(train[['source','num_votes']]) #this should be wrong but is issuing a smaller error
-
 
 # Decimal places      Object that can be unambiguously recognized at this scale
 # 0	                  country or large region
@@ -225,57 +236,24 @@ source = dummies.fit_transform(np.array(train[['source']]).reshape(-1,1))
 # 7                   practical limit of commercial surveying
 # 8                   specialized surveying (e.g. tectonic plate mapping)
 
-location = train[['latitude','longitude']]
-latitude = location['latitude'].apply(lambda x: np.round(x,3))
-longitude = location['longitude'].apply(lambda x: np.round(x,3))
-scaler = StandardScaler(copy=True, with_mean=True, with_std=True)
-location = scaler.fit_transform(np.stack((latitude,longitude),axis=-1))
-location = np.stack((latitude,longitude),axis=-1)
-
+latitude = train['latitude'].apply(lambda x: np.round(x,3))
+longitude = train['longitude'].apply(lambda x: np.round(x,3))
 #Location not rounded
 #location = train[['latitude','longitude']]
-
 #Location not scaled
 #location = np.stack((latitude,longitude),axis=-1)
 
-location = scipy.sparse.csr_matrix(location)
 
-
-#SGD L1 learning_rate='invscaling' Lasso
-#text_fields = scipy.sparse.hstack([description]) # Overall MSE: -0.207462
-#text_fields = scipy.sparse.hstack([description,summary]) # Overall MSE: -0.201481
-#text_fields = scipy.sparse.hstack([description,summary,source]) # Overall MSE: -0.177597
-#text_fields = scipy.sparse.hstack([description,summary,source,location]) #Overall MSE: -0.180237
-
-
-#SGD L2 learning_rate='optimal': Ridge
-#text_fields = scipy.sparse.hstack([description]) # Overall MSE: -8.615321
-#text_fields = scipy.sparse.hstack([description,summary]) # Overall MSE: -16.659406
-#text_fields = scipy.sparse.hstack([description,summary,source]) # Overall MSE: -15.788960
-#text_fields = scipy.sparse.hstack([description,summary,source,location]) #Overall MSE: -17.936516
-
-#SGD L2 learning_rate='invscaling': Ridge
-#text_fields = scipy.sparse.hstack([description]) # Overall MSE: -0.197950
-#text_fields = scipy.sparse.hstack([description,summary]) # Overall MSE:  -0.196244
-#text_fields = scipy.sparse.hstack([description,summary,source]) # Overall MSE: -0.176347
-#text_fields = scipy.sparse.hstack([description,summary,source,location]) #Overall MSE: -0.176827
-
-
-#SVM (kernel=linear, C=0.001)
-#text_fields = scipy.sparse.hstack([description,summary,source,location],format='csr')
-#-0.179531 - C=0.4
-#-0.166674 - C=0.001
-#text_fields = scipy.sparse.hstack([description,summary])
-#-0.188104 - C=0.4
-#-0.183882 - C=0.2
-#-0.181601 - C=0.1
-#-0.174363 - C=0.01
-#-0.174183 - C=0.001
+onehot = np.stack((train['hour'],train['dayofweek'],train['year'],latitude,longitude),axis=-1)
+from sklearn.preprocessing import OneHotEncoder
+dummies = OneHotEncoder(handle_unknown='ignore')
+onehot = dummies.fit_transform(onehot)
+onehot = scipy.sparse.csr_matrix(onehot)
 
 
 #text_fields = scipy.sparse.hstack([description,summary])
-#text_fields = scipy.sparse.hstack([description,summary,source])
-text_fields = scipy.sparse.hstack([description,summary,source,location])
+text_fields = scipy.sparse.hstack([description,summary,onehot])
+
 y_train = train['num_votes'].apply(lambda x: np.log1p(x))
 #y_train = train['num_votes']
 
@@ -293,28 +271,57 @@ y_train = train['num_votes'].apply(lambda x: np.log1p(x))
 # regressor = sklearn.linear_model.RidgeCV(alphas=(0.001, 0.01, 0.1, 1.0, 10.0), fit_intercept=True, normalize=False, scoring=None, cv=5, gcv_mode=None, store_cv_values=False)
 # regressor.fit(text_fields,y_train)
 # alpha = regressor.alpha_
+# print(alpha)
 # regressor = sklearn.linear_model.Ridge(alpha=alpha, fit_intercept=True, normalize=False, copy_X=True, max_iter=None, tol=0.001, solver='auto', random_state=999)
 
+
+#Lasso regression: is also known as L1 regularization. The penalty it applies is a sum of the absolute values of the weights.
+# This leads to a different effect compared to the Ridge method as the weights can be set to zero if they are not relevant.
+# Therefore, Lasso also acts as a feature selection mechanism.
 # regressor = sklearn.linear_model.LassoCV(eps=0.001, n_alphas=10, alphas=None, fit_intercept=True, normalize=False,
 #                                          precompute='auto', max_iter=1000, tol=0.0001, copy_X=True, cv='warn',
 #                                          verbose=False, n_jobs=None, positive=False, random_state=999,
 #                                          selection='cyclic')
+# regressor.fit(text_fields,y_train)
+# alpha = regressor.alpha_
+# print(alpha)
+# regressor = sklearn.linear_model.Lasso(alpha=alpha, fit_intercept=True, normalize=False, precompute=False, copy_X=True, max_iter=1000, tol=0.0001, warm_start=False, positive=False, random_state=999, selection='cyclic')
 
 # regressor = GradientBoostingRegressor(loss='ls', learning_rate=0.1, n_estimators=100, subsample=1.0,
- #                 criterion='friedman_mse', min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0,
+#                 criterion='friedman_mse', min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0,
 #                 max_depth=3, min_impurity_decrease=0.0, min_impurity_split=None, init=None, random_state=999,
 #                 max_features=None, alpha=0.9, verbose=0, max_leaf_nodes=None, warm_start=False, presort='auto',
 #                 validation_fraction=0.1, n_iter_no_change=None, tol=0.0001)
 
 
+
+#### SVR
 regressor = sklearn.svm.LinearSVR(epsilon=0.0, tol=0.0001, C=0.01, loss='epsilon_insensitive',
                                  fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=0,
-                                random_state=999, max_iter=1000)
+                                random_state=None, max_iter=5000)
+param_grid = {'C':[0.0001,0.001,0.1, 1, 10, 100]}
+gridSearch = sklearn.model_selection.GridSearchCV(regressor, param_grid, scoring=None, n_jobs=2, iid='warn', refit=False, cv='warn', verbose=0, pre_dispatch='2*n_jobs', error_score='raise-deprecating', return_train_score=False)
+gridSearch.fit(text_fields,y_train)
+C_ = gridSearch.best_params_['C']
+print(C_) #0.001
 
-result = cross_validate(regressor,X=text_fields,y=y_train,cv=5,scoring={'rmsle':rmsle_score,'r2':'r2','explained_variance':'explained_variance'}, return_estimator=True)
+# parameters= {'C': scipy.stats.expon(scale=10)}
+# gridSearch = sklearn.model_selection.RandomizedSearchCV(regressor, parameters, n_iter=50, scoring=None, n_jobs=2, iid='warn', refit=True, cv='warn', verbose=0, pre_dispatch='2*n_jobs', random_state=None, error_score='raise-deprecating', return_train_score=False)
+# gridSearch.fit(text_fields,y_train)
+# C_ = gridSearch.best_params_['C']
+# print(C_) #383.4619060554966
+
+regressor = sklearn.svm.LinearSVR(epsilon=0.0, tol=0.0001, C=0.001, loss='epsilon_insensitive',
+                                 fit_intercept=True, intercept_scaling=1.0, dual=True, verbose=0,
+                                random_state=999, max_iter=5000)
 
 
-print("Overall RMSLE: %f" % np.mean(result['test_rmsle']))
+############################################################################
+
+
+result = cross_validate(regressor,X=text_fields,y=y_train,cv=5,scoring={'mse':score,'r2':'r2','explained_variance':'explained_variance'}, return_estimator=True)
+
+print("Overall MSE: %f" % np.mean(result['test_mse']))
 print("R2: %f" % np.mean(result['test_r2']))
 print(result['test_r2'])
 
@@ -323,22 +330,22 @@ print(result['test_r2'])
 # x = PrettyTable()
 # #x.field_names = [" ","Fold 1", "Fold 2", "Fold 3", "Fold 4", "Fold 5"]
 # x.field_names = [" ","Fold 1", "Fold 2"]
-# x.add_row(["RMSLE: "] + [str(v) for v in result['test_rmsle']])
+# x.add_row(["MSE: "] + [str(v) for v in result['test_mse']])
 # print(x)
 
 
 ############################### StatsModels ###################################
 ######### Generating Diagnostic Plots for the data #################
 
-y_train = train['num_votes'].apply(lambda x: np.log(x))
+#y_train = train['num_votes'].apply(lambda x: np.log(x))
 
 #y_train = train['num_votes']
 
-print(type(text_fields))
-text_fields = scipy.sparse.hstack([summary,source,location],format='csr')
-rows = int(0.2 * (text_fields.get_shape()[0]))
-text_fields = text_fields[0:rows,:]
-text_fields = text_fields.toarray()
+# print(type(text_fields))
+# text_fields = scipy.sparse.hstack([summary,source,location],format='csr')
+# rows = int(0.2 * (text_fields.get_shape()[0]))
+# text_fields = text_fields[0:rows,:]
+# text_fields = text_fields.toarray()
 #diagnostic_plots(text_fields,y_train[0:rows])
 #plt.show()
 

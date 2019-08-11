@@ -261,5 +261,5 @@ model = keras.models.load_model('lstm_model_3.h5')
 pred = pickle.load(open('prediction_3.save', 'rb'))
 auc = mean_squared_error(test['num_votes'], pred)
 print('Overall Test RMSE %.3f' % sqrt(auc))
-print('RMSLE %.3f' % rmsle(pred, test['num_votes']))
+print('RMSLE %.3f' % rmsle(pred, test['num_votes'])) #RMSLE 0.145
 
