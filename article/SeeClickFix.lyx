@@ -279,27 +279,14 @@ Table 1 shows a description of the data.
 num_votes
 \emph default
  as the target variable.
- Figure 1, 2, and 3 show the distribution of the records among issue categories
- (only 24% of the data).
- In Figure 1 we can see that issues related to trash, trees and potholes
- correspond to more than 50% of all issues, whereas issues related to lost
- and found items, or to public art, are rarely reported by citizens.
- Issues reported more frequently have higher absolute number of votes.
- But this absolute number is not very useful.
- Figure 2 gives an insight about the urgency of an issue by computing the
- average of votes by category.
- We can see that issues like drug dealing and public concern, although rare,
- receive many votes when occur, revealing the natural concern citizens have
- about them.
- Finally, Figure 3 shows that more than 70% of the reported issues have
- only one vote.
- For a crowdsourcing platform, this is not very encouraging, and we may
- expect that the data may not be very meaningful once there is that little
- variability in 
+ Notice the high rate of missing value for 
 \emph on
-num_votes
+tag_type
 \emph default
 .
+ It will be used to produce a baseline model, but not for predictions.
+ Figure 1, 2, and 3 show the distribution of the records among issue categories
+ (only 24% of the data).
  
 \end_layout
 
@@ -825,6 +812,17 @@ Dataset summary
 \end_layout
 
 \begin_layout Standard
+In Figure 1 we can see that issues related to trash, trees and potholes
+ correspond to more than 50% of all issues, whereas issues related to lost
+ and found items, or to public art, are rarely reported by citizens.
+ Issues reported more frequently have higher absolute number of votes.
+ But this absolute number is not very useful.
+ Figure 2 gives an insight about the urgency of an issue by computing the
+ average of votes by category.
+ We can see that issues like drug dealing and public concern, although rare,
+ receive many votes when occur, revealing the natural concern citizens have
+ about them.
+ 
 \begin_inset Float figure
 wide false
 sideways false
@@ -835,7 +833,7 @@ status open
 \begin_inset Graphics
 	filename frequency_issue_type.png
 	lyxscale 80
-	scale 60
+	scale 40
 
 \end_inset
 
@@ -864,6 +862,22 @@ Frequency of issue category.
 \end_layout
 
 \begin_layout Standard
+One could argue that this order of relevance among issues type would be
+ enough as prioritization tool, but typically this is hardly the case.
+ Imagine two situations of fallen trees, one on the sidewalk and other on
+ the street, blocking the passage.
+ It is easy to estimate the high urgency of the second case.
+ Even having more and more detailed categories, it is always possible that
+ exceptions can occur.
+ Thus, ideally, what we would like to evaluate is if a statistical model
+ would be able of showing a fine grained distinction between levels of urgency,
+ based on the features available in the present setting (of course a platform
+ could allow people to check weather a problem is urgent or not, but this
+ not the case here).
+ 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -874,7 +888,7 @@ status open
 \begin_inset Graphics
 	filename ratio_votes_issue_category.png
 	lyxscale 80
-	scale 60
+	scale 40
 
 \end_inset
 
@@ -885,7 +899,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Average number of votes by issue type.
+Average number of votes per issue type.
 \end_layout
 
 \end_inset
@@ -899,6 +913,21 @@ Average number of votes by issue type.
 \end_layout
 
 \begin_layout Standard
+Finally, Figure 3 shows that more than 70% of the reported issues have only
+ one vote.
+ For a crowdsourcing platform, this is not very encouraging, and we may
+ expect that the data may not be very meaningful since there is that little
+ variability in 
+\emph on
+num_votes
+\emph default
+.
+ This fact may jeopardize our aim of fine grained evaluation since there
+ are not examples to learn from.
+ 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -909,7 +938,7 @@ status open
 \begin_inset Graphics
 	filename frequency_num_votes.png
 	lyxscale 80
-	scale 60
+	scale 40
 
 \end_inset
 
@@ -1040,7 +1069,7 @@ Summary
 \begin_inset Text
 
 \begin_layout Plain Layout
-6.4
+3.04
 \end_layout
 
 \end_inset
@@ -1078,7 +1107,7 @@ Description
 \begin_inset Text
 
 \begin_layout Plain Layout
-13
+6.17
 \end_layout
 
 \end_inset
@@ -1109,31 +1138,12 @@ Statistics of the summary and description fields
 \end_layout
 
 \begin_layout Standard
-The problem as originally described in the hackathon, is to predict num_votes,
- num_views, and num_comments.
- The evaluation metric defined for the competition, Root Mean Squared Logarithmi
-c Error (RMSLE), is described by the following equation: 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-RMSLE=\sqrt{\frac{1}{n}\sum(log(p_{i}+1)-log(a_{i}+1))^{2}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-where p and a are arrays of shape (num_samples, num_targets).
-\end_layout
-
-\begin_layout Standard
 As we mentioned before, our main goal is to help in estimating the urgency
- of a reported issue by predicting num_votes.
- Therefore, in this work, we concentrate in just predicting it.
+ of a reported issue by predicting 
+\emph on
+num_votes
+\emph default
+.
  As evaluation metric we use the Mean Squared Error (MSE), which evaluates
  how close are 
 \emph on
@@ -1177,40 +1187,84 @@ In order to evaluate the feasibility of our proposal, we test our hypothesis
  points:
 \end_layout
 
-\begin_layout Itemize
-Extract suitable features: the features we use to train our models are descripti
-on, summary, date and location (latitude and longitude).
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{itemize}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item Extract suitable features: the features we use to train our models
+ are description, summary, date and location (latitude and longitude).
  We divide the experiment in two parts: 
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Part A: using only the textual features: summary and description.
+\begin_layout Plain Layout
+
+ 
+\backslash
+begin{itemize}
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+item Part A: using only the textual features: summary and description.
  
 \end_layout
 
-\begin_layout Itemize
-Part B: using all four features: summary, description, source and location.
+\begin_layout Plain Layout
+
+ 
+\backslash
+item Part B: using all four features: summary, description, date and location.
 \end_layout
 
-\begin_layout Standard
-We do that because we want to evaluate how well the models will perform
- using only these two attributes.
- We make the assumption that textual description features will always be
- present.
- Having both results separately helps to find which model is better in a
- more general scenario.
+\begin_layout Plain Layout
+
+  
+\backslash
+end{itemize}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item Configure the parameters and train the models using a training set.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item The estimated MSE is the mean of a 5-fold cross-validation.
  
 \end_layout
 
-\end_deeper
-\begin_layout Itemize
-Configure the parameters and train the models using a training set.
+\begin_layout Plain Layout
+
+
+\backslash
+end{itemize}
 \end_layout
 
-\begin_layout Itemize
-Test the performance of the model in a test set.
- 
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1382,18 +1436,19 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename Unroled_RNN.png
 	lyxscale 20
-	scale 30
+	scale 20
 
 \end_inset
 
-
+ 
 \begin_inset Graphics
 	filename bidirectional_RNN.png
 	lyxscale 50
-	scale 30
+	scale 25
 
 \end_inset
 
@@ -1456,10 +1511,11 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename Bi-RNN.png
 	lyxscale 50
-	scale 50
+	scale 30
 
 \end_inset
 
@@ -1528,7 +1584,7 @@ status open
 \begin_inset Graphics
 	filename residualxpredicted.png
 	lyxscale 50
-	scale 50
+	scale 30
 
 \end_inset
 
@@ -1536,7 +1592,7 @@ status open
 \begin_inset Graphics
 	filename residualxpredicted_.png
 	lyxscale 50
-	scale 50
+	scale 30
 
 \end_inset
 
@@ -1577,7 +1633,17 @@ Now we present the results for different scenarios.
 \end_layout
 
 \begin_layout Standard
-Our first set of results, presented in Table 3, encompass the whole dataset.
+Our first set of results, presented in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Results-for-the"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, encompass the whole dataset.
  The table presents, besides the error term, also the R-squared associated
  with the linear models.
  The R-squared, also known as coefficient of determination, is a metric
@@ -1585,7 +1651,22 @@ Our first set of results, presented in Table 3, encompass the whole dataset.
  variable explained by the predictors.
  Thus, for instance, a R-squared of 0.6, means that 60% of the variability
  of Y is explained by X.
+ The results seem to be good, with the LSTM model being the winner.
+ The MSEs are low and the R-squared are high.
+ But recall that the variability of the dataset is tiny.
+ Around 72% of the examples have only one vote.
+ Thus, if the model only predicts one, it will be right 72% of the time.
+ The variance of 
+\emph on
+num_votes
+\emph default
+ is 1.52.
+ The baseline model here, which predicts the average per neighborhood, has
  
+\series bold
+MSE of 0.62
+\series default
+.
 \end_layout
 
 \begin_layout Standard
@@ -1776,7 +1857,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.94
+0.87
 \end_layout
 
 \end_inset
@@ -1785,7 +1866,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.51
+0.40
 \end_layout
 
 \end_inset
@@ -1794,7 +1875,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.93
+0.85
 \end_layout
 
 \end_inset
@@ -1803,7 +1884,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.53
+0.40
 \end_layout
 
 \end_inset
@@ -1823,7 +1904,7 @@ LSTM
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.90
+0.82
 \end_layout
 
 \end_inset
@@ -1841,7 +1922,7 @@ x
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0.65
 \end_layout
 
 \end_inset
@@ -1867,6 +1948,12 @@ x
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Results-for-the"
+
+\end_inset
+
 Results for the complete dataset.
 \end_layout
 
@@ -1881,7 +1968,43 @@ Results for the complete dataset.
 \end_layout
 
 \begin_layout Standard
-Baseline: 0.82
+For the second scenario, we compute the baseline model by predicting the
+ average of votes grouped by issue type and location.
+ Hence, for each example, the prediction is the mean computed for that specific
+ neighborhood and problem category.
+ This model encompasses only the records whose have 
+\emph on
+tag_type
+\emph default
+ populated (24% of the data) and has a 
+\series bold
+MSE of 0.83
+\series default
+.
+ Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Results-for-the-baseline"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ brings the result for the algorithms applied to this restricted dataset.
+ Here, the variance of 
+\emph on
+num_votes
+\emph default
+ is higher (3.41), and the results are much worse.
+ Without using 
+\emph on
+tag_type
+\emph default
+ as predictor, the latent information present is not enough to the evaluated
+ models to extract meaningful patterns in order to make an accurate prediction.
+ Again, the winner was LSTM but still could not surpass the baseline model.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -2025,7 +2148,7 @@ Ridge
 \begin_inset Text
 
 \begin_layout Plain Layout
-3.05
+2.87
 \end_layout
 
 \end_inset
@@ -2034,7 +2157,7 @@ Ridge
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.08
+0.13
 \end_layout
 
 \end_inset
@@ -2043,7 +2166,7 @@ Ridge
 \begin_inset Text
 
 \begin_layout Plain Layout
-2.80
+2.70
 \end_layout
 
 \end_inset
@@ -2052,7 +2175,7 @@ Ridge
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.15
+0.18
 \end_layout
 
 \end_inset
@@ -2072,7 +2195,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-3.14
+3.01
 \end_layout
 
 \end_inset
@@ -2090,7 +2213,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-3.04
+2.81
 \end_layout
 
 \end_inset
@@ -2099,7 +2222,7 @@ SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.14
+0.16
 \end_layout
 
 \end_inset
@@ -2119,7 +2242,7 @@ LSTM
 \begin_inset Text
 
 \begin_layout Plain Layout
-2.20
+2.60
 \end_layout
 
 \end_inset
@@ -2137,7 +2260,7 @@ x
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+2.33
 \end_layout
 
 \end_inset
@@ -2163,6 +2286,12 @@ x
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Results-for-the-baseline"
+
+\end_inset
+
 Results for the baseline dataset.
 \end_layout
 
@@ -2209,10 +2338,23 @@ To evaluate our hypothesis we employ different machine learning algorithms
 \end_layout
 
 \begin_layout Standard
-Based on the results, we conclude that machine learning techniques can indeed
- be used successfully with crowdsourcing data in a city maintenance setting.
- The efficiency is attested by the small MSE with a coefficient of determination
- R-squared around 60%.
+Our findings show that the models could not overcome the baseline models
+ in both scenarios.
+ In the first one, although the error was close to the baseline error, there
+ is the issue of the dataset being biased and have only one vote for around
+ seventy percent of the records.
+ For the second scenario the baseline, besides the neighborhood, also uses
+ the category of each problem to compute the predictions.
+ The size of the dataset decreases and so the accuracy of the models.
+ To mimic the baseline, the models should have to be inferred the category
+ from the textual features, which is hard.
+ In both cases the models were highly dependent on the availability and
+ quality of the textual information and it seems that regression problems
+ relying on text is hard.
+ Our findings are inconclusive whether or not machine learning can be better
+ than simple aggregation and summarization of the data in this setting.
+ Maybe a better approach would be to use synthetic data in order to evaluate
+ the real feasibility.
  
 \end_layout
 

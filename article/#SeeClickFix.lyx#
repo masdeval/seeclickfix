@@ -1,0 +1,2325 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass apa6
+\begin_preamble
+\usepackage[table]{xcolor}
+\end_preamble
+\options doc
+\use_default_options false
+\begin_modules
+natbibapa
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Style Journal
+LatexName             journal
+LatexType             Command
+#	InTitle               0
+InPreamble            1
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\headsep 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Predicting the urgency of urban issues
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Warning: Don't force a newline in manuscript mode.
+ It won't compile.
+ If you want to in jou or doc mode, that's fine.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Christian Braz
+\end_layout
+
+\begin_layout LeftHeader
+Author
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+The left header is used for the author's last name(s), and appears on even-page
+ headers in jou mode.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Affiliation
+George Washington University
+\begin_inset Newline newline
+\end_inset
+
+Department of Data Science
+\end_layout
+
+\begin_layout Abstract
+City maintenance is laborious and expensive.
+ One of the main challenges is to monitor unpredictable situations like
+ potholes, grafiti, broken footpaths, and so on.
+ Once detected, government officials must be able to allocate the resources
+ timely and prioritizing the issues most relevant for the citizens.
+ The pervasive presence today of mobile internet connection in urban centers
+ has enabled modern ways of interaction between the municipality and the
+ population, resulting in the so-called Government 2.0.
+ One of such way is crowdsourcing platforms, such as See-Click-Fix, FixMyStreet,
+ CitySourced, OpenIDEO, and many others, which allow and stimulate collaborative
+ participation by reporting urban issues.
+ The importance of an issue can be endorsed via votes in the platform, meaning
+ that issues with more votes represent the overall felling of the neighborhood
+ that those should be solved first.
+ This, in turn, constitutes important information to help organizing logistics,
+ allocate resources, and fulfill citizens' well-being feeling.
+ The problem is that may take time until collecting enough votes to be able
+ to estimate the urgency of an issue.
+ In this work we propose to estimate the number of votes an issue will receive
+ using machine learning techniques.
+ As the number of votes is a proxy to the urgency, we hope to improve city
+ maintenance by providing in advance sensitive information.
+ 
+\end_layout
+
+\begin_layout Keywords
+crowdsourcing, government 2.0, web 2.0, machine learning 
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Since its rising in early 90s, the World Wide Web has been modifying the
+ way people interact.
+ Its distributed infrastructure, built upon Internet's top layers, made
+ it pervasive and an ideal tool to enable all kinds of communications services.
+ On a business perspective, new jargons were created trying to categorize
+ such virtual interactions, such as Business-to-Consumer, Business-to-Bussiness,
+ and Customer-to-Customer 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "B2B"
+literal "true"
+
+\end_inset
+
+.
+ Social networks are also an example of interaction.
+ Facebook, Twitter or Instagram are well known interactive platforms which
+ enable users express their opinions.
+ Governments have also been experimenting changes in the way the citizens
+ interact with them and Kanhere (2011) provides a comprehensive overview.
+ The so-called Government 2.0 implies that information should flow not only
+ from the government to the citizens but also from citizens to the government
+ and among citizens.
+ 
+\end_layout
+
+\begin_layout Standard
+City maintenance is expensive, since it involves monitoring and fixing a
+ variety of complex issues related to public safety, environmental problems,
+ and quality of life.
+ In particular, monitoring unpredictable urban issues (e.g., potholes, damaged
+ street signs, graffiti, street light issues, damaged trees) usually requires
+ a large number of employees working on a permanent basis.
+ However, these same urban centers are full of people armed with their GPS
+ enabled cell phones, and represent an important asset to help fine-grained
+ monitoring capabilities.
+ Civic engagement platforms, such as See-Click-Fix.com, allow citizens to
+ report urban issues by entering, for instance, GPS location and free text
+ describing the problem.
+ Having this information, in turn, helps municipalities to reduce costs
+ and improve logistics by better allocating resources.
+\end_layout
+
+\begin_layout Standard
+Another important aspect in city maintenance, is how to rank the problems.
+ As the resources are limited, most of the time would not be possible to
+ fix all the open issues.
+ Thus, it is necessary to have a way to measure which ones are more important.
+ In the same crowdsourcing platforms, the importance of an issue can be
+ endorsed via votes, meaning that the number of votes can act as a proxy
+ to the urgency of an issue.
+ Therefore, a rank of issues can be built based on those votes.
+ While the number of votes an issue receives ultimately reflects its urgency
+ to be solved, acquiring a significant number of votes may take several
+ days or weeks, leading to ineffectiveness and late responses.
+ In order to become more responsive and better meet the needs and concerns
+ of the citizens, government officials must be able to prioritize more urgent
+ issues as soon as possible.
+ 
+\end_layout
+
+\begin_layout Standard
+In this work, we evaluate machine learning techniques to predict the number
+ of votes an issue will receive.
+ More specifically, we evaluate Ridge Regression, Support Vector Machine
+ (SVM), and Long Short Term Memory (LSTM) algorithms.
+ We hope to demonstrate the feasibility of this approach, and help to contribute
+ in modernizing an important aspect of public administration.
+ This wok is organized as follows: next we expose more details about the
+ problem and the data, then we describe the experiment and show the results,
+ and finally we address our final considerations.
+ 
+\end_layout
+
+\begin_layout Section
+Problem statement and the data
+\end_layout
+
+\begin_layout Standard
+Our experiments use the [SeeClickFix] hackathon data, comprising 34 Mb of
+ size and consisting of a total of 223,129 reported issues from four cities:
+ Oakland, Richmond, New Haven, and Chicago.
+ SeeClickFix.com is a crowdsourcing initiative that allows citizens to report
+ issues categorized in 311 different types.
+ The main way to submit a request is taking a picture and sending it via
+ their mobile app.
+ They claim that the service manages the whole work-flow, linking the citizen
+ with the city hall.
+ 
+\end_layout
+
+\begin_layout Standard
+Table 1 shows a description of the data.
+ There are eleven attributes, being five of them (in bold) used as predictors,
+ and 
+\emph on
+num_votes
+\emph default
+ as the target variable.
+ Notice the high rate of missing value for 
+\emph on
+tag_type
+\emph default
+.
+ It will be used to produce a baseline model, but not for predictions.
+ Figure 1, 2, and 3 show the distribution of the records among issue categories
+ (only 24% of the data).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="12" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Column
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+% Missing Values
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+randomly assigned id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+latitude
+\series default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+latitude of the issue
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+longitude
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+longitude of the issue
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+summary
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+short text title
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Text
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+longer text explanation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Text
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+52
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+date
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+yyyy-mm-dd HH:mm:ss 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Timestamp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+num_comments 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+number of user comments
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+num_views
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+number of views
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+source
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+where the issue was created
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Categorical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tag_type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+type of issue
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Categorical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+76
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+num_votes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+number of user votes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Numeric
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Dataset summary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Figure 1 we can see that issues related to trash, trees and potholes
+ correspond to more than 50% of all issues, whereas issues related to lost
+ and found items, or to public art, are rarely reported by citizens.
+ Issues reported more frequently have higher absolute number of votes.
+ But this absolute number is not very useful.
+ Figure 2 gives an insight about the urgency of an issue by computing the
+ average of votes by category.
+ We can see that issues like drug dealing and public concern, although rare,
+ receive many votes when occur, revealing the natural concern citizens have
+ about them.
+ 
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename frequency_issue_type.png
+	lyxscale 80
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Frequency of issue category.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One could argue that this order of relevance among issues type would be
+ enough as prioritization tool, but typically this is hardly the case.
+ Imagine two situations of fallen trees, one on the sidewalk and other on
+ the street, blocking the passage.
+ It is easy to estimate the high urgency of the second case.
+ Even having more and more detailed categories, it is always possible that
+ exceptions can occur.
+ Thus, ideally, what we would like to evaluate is if a statistical model
+ would be able of showing a fine grained distinction between levels of urgency,
+ based on the features available in the present setting (of course a platform
+ could allow people to check weather a problem is urgent or not, but this
+ not the case here).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ratio_votes_issue_category.png
+	lyxscale 80
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Average number of votes per issue type.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, Figure 3 shows that more than 70% of the reported issues have only
+ one vote.
+ For a crowdsourcing platform, this is not very encouraging, and we may
+ expect that the data may not be very meaningful since there is that little
+ variability in 
+\emph on
+num_votes
+\emph default
+.
+ This fact may jeopardize our aim of fine grained evaluation since there
+ are not examples to learn from.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename frequency_num_votes.png
+	lyxscale 80
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Frequency of votes.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Another important statistic is the length of the summary and description
+ fields.
+ This has influence in how to set the parameters of our models and are depicted
+ in Table 2.
+ The average number of words for summary are 6.4 words, and for description
+ are 13 words.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Feature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Max
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Min
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Avg
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Summary
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+49
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.04
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+924
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6.17
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Statistics of the summary and description fields
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As we mentioned before, our main goal is to help in estimating the urgency
+ of a reported issue by predicting 
+\emph on
+num_votes
+\emph default
+.
+ As evaluation metric we use the Mean Squared Error (MSE), which evaluates
+ how close are 
+\emph on
+p
+\emph default
+ and 
+\emph on
+a
+\emph default
+, the predicted and the true value.
+ The MSE formula is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+MSE=\frac{1}{n}\sum(p_{i}-a_{i})^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the next section we discuss in more detail our experiments.
+ We make a brief description of the algorithms and features we use, and
+ also show the MSE issued by each of them.
+ 
+\end_layout
+
+\begin_layout Section
+Experiment and results
+\end_layout
+
+\begin_layout Standard
+In order to evaluate the feasibility of our proposal, we test our hypothesis
+ using four different supervised machine learning algorithms designed to
+ solve regression problems.
+ The overall methodology for the experiment can be summarized by the following
+ points:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+/itemize 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Extract suitable features: the features we use to train our models are descripti
+on, summary, date and location (latitude and longitude).
+ We divide the experiment in two parts: 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Part A: using only the textual features: summary and description.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Part B: using all four features: summary, description, source and location.
+\end_layout
+
+\begin_layout Standard
+We do that because we want to evaluate how well the models will perform
+ using only these two attributes.
+ We make the assumption that textual description features will always be
+ present.
+ Having both results separately helps to find which model is better in a
+ more general scenario.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Configure the parameters and train the models using a training set.
+\end_layout
+
+\begin_layout Enumerate
+The estimated MSE is the mean of a 5-fold cross-validation.
+ 
+\end_layout
+
+\begin_layout Standard
+This section is organized as follows: first we describe in more details
+ how we use the selected features, then we make a brief description of each
+ algorithm used, and finally we present the results obtained for Part A
+ and B.
+ 
+\end_layout
+
+\begin_layout Subsection
+Feature Extraction
+\end_layout
+
+\begin_layout Standard
+One important matter in using supervised learning algorithms is to have
+ data in a suitable form to feed them.
+ The task of transform the raw data in features is called feature extraction
+ and some of the representation techniques we use are:
+\end_layout
+
+\begin_layout Itemize
+Bag-of-words (BOW): This is the most common approach to extract features
+ from text.
+ The idea is to represent each document as a (sparse) vector where each
+ cell counts the number of times a particular word has occurred in the text.
+ BOW does not consider the order of words and it is often used with n-gram
+ models.
+ 
+\end_layout
+
+\begin_layout Itemize
+Word Semantic Vectors: word vectors, Word2Vec, word embedding are all designatio
+ns of how has been known the recent supervised learning technique to learn
+ distributed representation of words 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Mikolov:2013:DRW:2999792.2999959"
+literal "false"
+
+\end_inset
+
+.
+ The main idea of the skip-gram with negative sampling algorithm is to train
+ a two layer neural network to predict the probability of all other words
+ in the vocabulary be in the vicinity of this word.
+ At the end of the training, the hidden layer will be the word vector because
+ one way for the network to output similar context predictions is if the
+ word vectors are similar.
+ So, if two words have similar contexts, then the network is motivated to
+ learn similar word vectors for these two words.
+\end_layout
+
+\begin_layout Standard
+The transformations we apply on the features are:
+\end_layout
+
+\begin_layout Itemize
+prediction and summary: to use with Ridge and SVM, transform to a BOW representa
+tion with 5000 words vocabulary size and pruning words that occur in more
+ than 50% of the documents.
+ To use with LSTM we convert each word in a 200 dimensional word embedding.
+ Fill with a blank character whenever it is null.
+\end_layout
+
+\begin_layout Itemize
+date: split in hour, day of week, year, and transform in its one-hot encoding
+ representation.
+\end_layout
+
+\begin_layout Itemize
+location: as they are latitude and longitude values represented as decimal
+ degrees, round to three decimal places which corresponds to neighborhood
+ precision.
+ Apply one-hot encoding conversion.
+ 
+\end_layout
+
+\begin_layout Itemize
+log transform 
+\emph on
+num_votes
+\emph default
+ for the linear models.
+\end_layout
+
+\begin_layout Subsection
+Algorithms
+\end_layout
+
+\begin_layout Standard
+Follow a brief description of the algorithms we use: 
+\end_layout
+
+\begin_layout Itemize
+Ridge regression: is a variant of the Ordinary Least Square that applies
+ a penalty to the loss function in order to prevent from overfitting.
+ This is achieved by adding an extra term to the loss that is a squared
+ sum of the weights.
+ This stimulates the optimization procedure to shrink the weights parameters
+ (but not zeroing them).
+ It is also known as L2 regularization.
+ 
+\end_layout
+
+\begin_layout Itemize
+Support Vector Machines (SVM): is a flexible and powerful algorithm based
+ on the idea of 
+\begin_inset Quotes eld
+\end_inset
+
+large margin
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It builds hyperplanes which can be used for classification or regression.
+ These hyperplanes are built in such a way to preserve the larger distance
+ possible between the samples contained in the two sides being separated.
+ This in turn implies in lower generalization error.
+ SVM is essentially a linear model.
+ However, it can be extended to non-linear boundaries by using different
+ kernels which implicitly transform the original features using non linear
+ functions.
+ 
+\end_layout
+
+\begin_layout Itemize
+Long Short Term Memory: is a class of neural models designed to tackle sequence
+ like problems, i.e., problems where past information is relevant to compute
+ actual outcomes.
+ Among common problems defined as sequential are speech recognition, time
+ series analysis, and neural language models.
+ LSTM is an improved version of a simpler neural model called Recurrent
+ Neural Network (RNN), Figure 4 left of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jurafsky:2000:SLP:555733"
+literal "false"
+
+\end_inset
+
+.
+ They share the idea of having a time component, a memory, to enable them
+ to take into account history of information.
+ LSTM is more robust and complex and is the 
+\emph on
+de facto
+\emph default
+ solution as it allows to process and learn from longer sequences by solving
+ many RNN limitations.
+ The main drawback of simple RNN is that it uses a single matrix of weights
+ (the memory component) to compute actual predictions and also to accumulate
+ past information.
+ Another problem related to neural models in general is the vanishing or
+ exploding gradients, an intrinsic effect associated with the way these
+ models learn and that is leveraged in sequence-like problems as the sequences
+ trend to be lengthy.
+ LSTM tackle these issues using an intricate mechanism of gates to control
+ the extent to which a new value flows into a LSTM unit (input gate), the
+ extent to which a value remains in the unit (forget gate), and the extent
+ to which a value in the unit is used to compute its output (output gate).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Unroled_RNN.png
+	lyxscale 20
+	scale 30
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename bidirectional_RNN.png
+	lyxscale 50
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Left: An schematic view of a simple recurrent neural network shown unrolled
+ in time.
+ Right: A bidirectional RNN.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Bidirectional LSTM: Figure 4 right shows a scheme of a bidirectional RNN.
+ In a regular RNN (or LSTM) at each step in time the network learned everything
+ about the sequence up to that point.
+ We say that the model is taking into account the context in its left.
+ For many problems, however, we have access to the entire sequence beforehand.
+ It turns out that it is also valuable and possible to keep track of the
+ context in the right as well.
+ Then, the network can combine both contexts and, as a result, modeling
+ a better representation of the data.
+ This is accomplished by a bidirectional RNN which process the input sequence
+ from the start to the end, and also in reverse, terribly capturing left
+ and right contexts into a single representation.
+ There are different architectures in which we can use Recurrent Neural
+ Networks.
+ For our proposal, we are using a Many to One design, which means we have
+ as input a sequence and as output a single value.
+ This scheme is depicted in Figure 5 (
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jurafsky:2000:SLP:555733"
+literal "false"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Bi-RNN.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A bidirectional RNN for sequence classification.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Experiments and results
+\end_layout
+
+\begin_layout Standard
+In this section we describe the experiment and the result for each one of
+ the algorithms experimented.
+ The experiment is divided in two parts as we want to assess the feasibility
+ of this approach in a more general setting.
+ Therefore, Part A addresses only textual features describing the problem.
+ We are assuming that a textual description of the issue is common among
+ different crowndsourcing platforms.
+ In Part B we also use location and date as features, as they are available
+ in SeeClickFix.com data.
+\end_layout
+
+\begin_layout Standard
+However, before we start, as we intend to use linear models to fit the data,
+ we first test whether the data has a linear relationship.
+ The graphs in Figure 6 show scatter plots of the residuals and the predicted
+ values.
+ Such graph can be used to detect if the assumption of linearity holds.
+ On the left hand side we see the plot over the original data which has
+ a R-squared of 0.52.
+ The red line is not perfectly aligned what might mean a non-linear relation.
+ To correct this, we then apply a log transformation on the target variable.
+ The new plot on the right has a better fit and a R-squared of 0.673.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename residualxpredicted.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename residualxpredicted_.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Diagnostic Plots
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These results suggest that a non-linear transformation of the target variable
+ leads to a better linear model, therefore our experiments are conducted
+ applying a log-transformation on 
+\emph on
+num_votes
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Now we present the results for different scenarios.
+ 
+\end_layout
+
+\begin_layout Standard
+Our first set of results, presented in Table 3, encompass the whole dataset.
+ The table presents, besides the error term, also the R-squared associated
+ with the linear models.
+ The R-squared, also known as coefficient of determination, is a metric
+ applied to linear models that captures the amount of variance of the target
+ variable explained by the predictors.
+ Thus, for instance, a R-squared of 0.6, means that 60% of the variability
+ of Y is explained by X.
+ The results seem to be good, with the LSTM model being the winner.
+ The MSEs are low and the R-squared are high.
+ But recall that the variability of the dataset is tiny.
+ Around 72% of the examples have only one vote.
+ Thus, if the model only predicts one, it will be right 72% of the time.
+ The variance of 
+\emph on
+num_votes
+\emph default
+ is 1.52.
+ The baseline model here, which predicts the average per neighborhood, has
+ 
+\series bold
+MSE of 0.62
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Algorithm
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part A
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part B
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ridge
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.59
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.60
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.87
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.40
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.40
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+LSTM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.65
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results for the complete dataset.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the second scenario, we compute the baseline model by predicting the
+ average of votes grouped by issue type and location.
+ Hence, for each example, the prediction is the mean computed for that specific
+ neighborhood and problem category.
+ This model encompasses only the records whose have 
+\emph on
+tag_type
+\emph default
+ populated (24% of the data) and has a 
+\series bold
+MSE of 0.83
+\series default
+.
+ Table 4 brings the result for the algorithms applied to this restricted
+ dataset.
+ Here, the variance of 
+\emph on
+num_votes
+\emph default
+ is higher (3.41), and the results are much worse.
+ Without using 
+\emph on
+tag_type
+\emph default
+ as predictor, the latent information present is not enough to the evaluated
+ models to extract meaningful patterns in order to make an accurate prediction.
+ Again, the winner was LSTM but still could not surpass the baseline model.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Algorithm
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part A
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Part B
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\series bold
+MSE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+R2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ridge
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.87
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.13
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.70
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.18
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.16
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+LSTM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.33
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results for the baseline dataset.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+In this work we use machine learning to leverage city maintenance capabilities.
+ Our hypothesis is that would be possible, with certain degree of accuracy,
+ to estimate the number of votes an issue would receive based on their attribute
+s.
+ The number of votes can be used to estimate urgency and therefore is a
+ useful metric to help in planning and prioritization.
+ 
+\end_layout
+
+\begin_layout Standard
+To evaluate our hypothesis we employ different machine learning algorithms
+ with different properties in an attempt to finding the one that suites
+ better to the data and leads to the most accurate prediction.
+ This is a common methodology in data analysis since the ground truth function
+ which generates the data is missing and our goal is to meet an approximation
+ to it.
+ We explore four regularized linear models - Ridge and SVM - and a neural
+ model designed to handle sequence learning problems, LSTM.
+ Linear models are the building blocks of data driven statistical learning
+ due their maturity, interpretability and predictive power.
+ The model that issued the smallest error was the neural one.
+ Neural models are highly flexible and, in this problem, where the main
+ feature are sentences in the English language, our choice of LSTM performed
+ pretty well.
+ 
+\end_layout
+
+\begin_layout Standard
+Our findings show that the models could not overcome the baseline models
+ in both scenarios.
+ In the first one, although the error was close to the baseline error, there
+ is the issue of the dataset being biased and have only one vote for around
+ seventy percent of the records.
+ For the second scenario the baseline, besides the neighborhood, also uses
+ the category of each problem to compute the predictions.
+ The size of the dataset decreases and so the accuracy of the models.
+ To mimic the baseline, the models should have to be inferred the category
+ from the textual features, which is hard.
+ In both cases the models were highly dependent on the availability and
+ quality of the textual information and it seems that regression problems
+ relying on text is hard.
+ Our findings are inconclusive whether or not machine learning can be better
+ than simple aggregation and summarization of the data in this setting.
+ Maybe a better approach would be to use synthetic data in order to evaluate
+ the real feasibility.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Unlike the original apa class, the apa6 class does not override whatever
+ citation style is listed in the bibliography.
+ However, for compliance with apa6, you should set the style to apacite.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "bibliography,sample"
+options "apacite"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
