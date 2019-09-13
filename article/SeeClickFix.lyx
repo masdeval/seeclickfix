@@ -103,7 +103,7 @@ End
 \begin_body
 
 \begin_layout Title
-Predicting the urgency of urban issues
+Improved city maintenance via machine learning
 \begin_inset Note Note
 status collapsed
 
@@ -148,7 +148,7 @@ Department of Data Science
 \begin_layout Abstract
 City maintenance is laborious and expensive.
  One of the main challenges is to monitor unpredictable situations like
- potholes, grafiti, broken footpaths, and so on.
+ potholes, graffiti, broken footpaths, and so on.
  Once detected, government officials must be able to allocate the resources
  timely and prioritizing the issues most relevant for the citizens.
  The pervasive presence today of mobile internet connection in urban centers
@@ -161,7 +161,7 @@ City maintenance is laborious and expensive.
  that issues with more votes represent the overall felling of the neighborhood
  that those should be solved first.
  This, in turn, constitutes important information to help organizing logistics,
- allocate resources, and fulfill citizens' well-being feeling.
+ allocate resources, and fulfill citizen's well-being feeling.
  The problem is that may take time until collecting enough votes to be able
  to estimate the urgency of an issue.
  In this work we propose to estimate the number of votes an issue will receive
@@ -199,7 +199,15 @@ literal "true"
  Facebook, Twitter or Instagram are well known interactive platforms which
  enable users express their opinions.
  Governments have also been experimenting changes in the way the citizens
- interact with them and Kanhere (2011) provides a comprehensive overview.
+ interact with them and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Kanhere"
+literal "false"
+
+\end_inset
+
+ provides a comprehensive overview.
  The so-called Government 2.0 implies that information should flow not only
  from the government to the citizens but also from citizens to the government
  and among citizens.
@@ -207,7 +215,7 @@ literal "true"
 \end_layout
 
 \begin_layout Standard
-City maintenance is expensive, since it involves monitoring and fixing a
+City maintenance is expensive since it involves monitoring and fixing a
  variety of complex issues related to public safety, environmental problems,
  and quality of life.
  In particular, monitoring unpredictable urban issues (e.g., potholes, damaged
@@ -870,7 +878,7 @@ One could argue that this order of relevance among issues type would be
  Even having more and more detailed categories, it is always possible that
  exceptions can occur.
  Thus, ideally, what we would like to evaluate is if a statistical model
- would be able of showing a fine grained distinction between levels of urgency,
+ would be able of showing a fine-grained distinction between levels of urgency,
  based on the features available in the present setting (of course a platform
  could allow people to check weather a problem is urgent or not, but this
  not the case here).
@@ -915,14 +923,14 @@ Average number of votes per issue type.
 \begin_layout Standard
 Finally, Figure 3 shows that more than 70% of the reported issues have only
  one vote.
- For a crowdsourcing platform, this is not very encouraging, and we may
+ For a crowdsourcing platform, this is not very encouraging, and we can
  expect that the data may not be very meaningful since there is that little
  variability in 
 \emph on
 num_votes
 \emph default
 .
- This fact may jeopardize our aim of fine grained evaluation since there
+ This fact may jeopardize our aim of fine-grained evaluation since there
  are not examples to learn from.
  
 \end_layout
@@ -971,8 +979,11 @@ Another important statistic is the length of the summary and description
  fields.
  This has influence in how to set the parameters of our models and are depicted
  in Table 2.
- The average number of words for summary are 6.4 words, and for description
- are 13 words.
+ The average number of words for summary are 3 words, and for description
+ are 6 words.
+ As we are strongly relying on the textual information, such few number
+ of words on average is also an indicative of the limitation this dataset
+ is imposing.
  
 \end_layout
 
@@ -1144,8 +1155,8 @@ As we mentioned before, our main goal is to help in estimating the urgency
 num_votes
 \emph default
 .
- As evaluation metric we use the Mean Squared Error (MSE), which evaluates
- how close are 
+ We frame the problem as a regression problem, thus, as evaluation metric,
+ we use the Mean Squared Error (MSE), which evaluates how close are 
 \emph on
 p
 \emph default
@@ -1181,7 +1192,7 @@ Experiment and results
 
 \begin_layout Standard
 In order to evaluate the feasibility of our proposal, we test our hypothesis
- using four different supervised machine learning algorithms designed to
+ using three different supervised machine learning algorithms designed to
  solve regression problems.
  The overall methodology for the experiment can be summarized by the following
  points:
@@ -1339,7 +1350,8 @@ date: split in hour, day of week, year, and transform in its one-hot encoding
 location: as they are latitude and longitude values represented as decimal
  degrees, round to three decimal places which corresponds to neighborhood
  precision.
- Apply one-hot encoding conversion.
+ Apply one-hot encoding conversion to isolate neighbors and give the models
+ more flexibility in dealing with neighborhood particularities.
  
 \end_layout
 
@@ -1399,7 +1411,7 @@ Long Short Term Memory: is a class of neural models designed to tackle sequence
  Among common problems defined as sequential are speech recognition, time
  series analysis, and neural language models.
  LSTM is an improved version of a simpler neural model called Recurrent
- Neural Network (RNN), Figure 4 left of 
+ Neural Network (RNN), Figure 4 (left) of 
 \begin_inset CommandInset citation
 LatexCommand citet
 key "Jurafsky:2000:SLP:555733"
@@ -1476,7 +1488,7 @@ Left: An schematic view of a simple recurrent neural network shown unrolled
 \end_layout
 
 \begin_layout Itemize
-Bidirectional LSTM: Figure 4 right shows a scheme of a bidirectional RNN.
+Bidirectional LSTM: Figure 4 (right) shows a scheme of a bidirectional RNN.
  In a regular RNN (or LSTM) at each step in time the network learned everything
  about the sequence up to that point.
  We say that the model is taking into account the context in its left.
@@ -1520,13 +1532,22 @@ status open
 \end_inset
 
 
+\begin_inset Graphics
+	filename /home/christian/GWU/Capstone/LSTM_Model.png
+	lyxscale 40
+	scale 30
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-A bidirectional RNN for sequence classification.
+Left, a bidirectional Many_To_One RNN architecture.
+ Right, diagram of our neural model.
 \end_layout
 
 \end_inset
@@ -1541,6 +1562,20 @@ A bidirectional RNN for sequence classification.
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Our sequential model encompasses three inputs, two of them are the textual
+ data (description and summary) and are processed by the LSTM.
+ For description, the time lag is 100 words, and for summary is 50.
+ Each word is converted to its 200 dimensional word embedding and the LSTM
+ cell has 200 hidden neurons.
+ All the LSTM layers are outputting the whole sequence, i.e., one output for
+ each step.
+ After averaging the two outputs of the two LSTMs (what lead us with two
+ vectors with 200 elements), we concatenate these outputs with the one-hot
+ representation of date and location to feed in a fully connected layer.
+ This scheme can be seen in the right side of Figure 5.
 \end_layout
 
 \begin_layout Subsection
@@ -2002,8 +2037,8 @@ num_votes
 tag_type
 \emph default
  as predictor, the latent information present is not enough to the evaluated
- models to extract meaningful patterns in order to make an accurate prediction.
- Again, the winner was LSTM but still could not surpass the baseline model.
+ models to extract meaningful patterns in order to overcome the baseline
+ model.
  
 \end_layout
 
@@ -2326,14 +2361,13 @@ To evaluate our hypothesis we employ different machine learning algorithms
  This is a common methodology in data analysis since the ground truth function
  which generates the data is missing and our goal is to meet an approximation
  to it.
- We explore four regularized linear models - Ridge and SVM - and a neural
+ We explore two regularized linear models - Ridge and SVM - and a neural
  model designed to handle sequence learning problems, LSTM.
  Linear models are the building blocks of data driven statistical learning
  due their maturity, interpretability and predictive power.
  The model that issued the smallest error was the neural one.
  Neural models are highly flexible and, in this problem, where the main
- feature are sentences in the English language, our choice of LSTM performed
- pretty well.
+ feature are sentences in the English language, makes sense to adopt it.
  
 \end_layout
 
@@ -2343,16 +2377,16 @@ Our findings show that the models could not overcome the baseline models
  In the first one, although the error was close to the baseline error, there
  is the issue of the dataset being biased and have only one vote for around
  seventy percent of the records.
- For the second scenario the baseline, besides the neighborhood, also uses
- the category of each problem to compute the predictions.
+ For the second scenario, the baseline is computed taking into account neighborh
+ood and category.
  The size of the dataset decreases and so the accuracy of the models.
  To mimic the baseline, the models should have to be inferred the category
  from the textual features, which is hard.
  In both cases the models were highly dependent on the availability and
- quality of the textual information and it seems that regression problems
- relying on text is hard.
+ quality of the textual information and it seems that regression relying
+ on text is hard.
  Our findings are inconclusive whether or not machine learning can be better
- than simple aggregation and summarization of the data in this setting.
+ than simple aggregation and summarization of data in this setting.
  Maybe a better approach would be to use synthetic data in order to evaluate
  the real feasibility.
  
