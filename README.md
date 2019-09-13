@@ -1,4 +1,4 @@
-# seeclickfix
+# [seeclickfix](https://github.com/masdeval/seeclickfix/blob/master/SeeClickFix.pdf)
 City maintenance is laborious and expensive. One of the main challenges is
 to monitor unpredictable situations like potholes, graffiti, broken footpaths,
 and so on. Once detected, government officials must be able to allocate the
