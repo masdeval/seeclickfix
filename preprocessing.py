@@ -27,7 +27,7 @@ def build_matrix(word_index, embedding, size):
             pass
     return embedding_matrix
 
-MAX_LEN = 20
+MAX_LEN = 40
 
 
 # train total
@@ -36,7 +36,8 @@ train = train[(train['num_votes'] < 50)]
 train['description'].fillna('this is a test', inplace=True)
 # train = train[train['created_time'] > '2013-01-01 00:00:00']
 # train = train.dropna(subset=['source'])
-train = train.sample(frac=.2)
+
+#train = train.sample(frac=.2) #?????? just to speed up things ??
 
 train.reset_index(inplace=True)
 print(train.info())
@@ -45,7 +46,7 @@ print(train.info())
 # train = train[(train['num_votes'] > 1) & (train['num_votes'] < 50)]
 
 # train baseline
-train_baseline = train[~train['tag_type'].isna()]
+#train_baseline = train[~train['tag_type'].isna()]
 # train = train_baseline
 # print(train.info())
 

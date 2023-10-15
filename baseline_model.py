@@ -221,7 +221,7 @@ description = train['description']
 summary = train['summary']
 description = description.apply(lambda x:  ' '.join(gensim.utils.simple_preprocess(x)))
 summary = summary.apply(lambda x:  ' '.join(gensim.utils.simple_preprocess(x)))
-bow = CountVectorizer(max_features=5000, binary=True, max_df=0.5,ngram_range=(1,2))
+bow = CountVectorizer(max_features=5000, binary=True, max_df=0.5,ngram_range=(1,3))
 #bow = bow.fit(description+summary)
 description = bow.fit_transform(description)
 bow.vocabulary_ = None
