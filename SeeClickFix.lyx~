@@ -1,0 +1,2283 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass apa6
+\begin_preamble
+\usepackage[table]{xcolor}
+\end_preamble
+\options doc
+\use_default_options false
+\begin_modules
+natbibapa
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Style Journal
+LatexName             journal
+LatexType             Command
+#	InTitle               0
+InPreamble            1
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\headsep 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Twitter Data Analysis
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Warning: Don't force a newline in manuscript mode.
+ It won't compile.
+ If you want to in jou or doc mode, that's fine.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ShortTitle
+Learning methods to sentiment classification
+\end_layout
+
+\begin_layout Author
+Christian Braz
+\end_layout
+
+\begin_layout LeftHeader
+Author
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+The left header is used for the author's last name(s), and appears on even-page
+ headers in jou mode.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Affiliation
+George Washington University
+\begin_inset Newline newline
+\end_inset
+
+Department of Data Science
+\end_layout
+
+\begin_layout Abstract
+Today's Internet content is largely made from unstructured data, mostly
+ images and text.
+ Part of the text content is in form of comments made by users giving their
+ impressions about virtually everything.
+ Processing natural language text documents is still a challenging task
+ due to its ambiguity and context dependency.
+ Nevertheless, being able to extract useful information from this source
+ is highly desirable due to its market value.
+ Understand better people's feeling about a matter, customer needs, or product's
+ quality, are just some of the possibilities by accomplishing this task.
+ In this work, we evaluate the performance of machine learning and natural
+ language processing techniques in the task of classifying sentiment in
+ tweets.
+ 
+\end_layout
+
+\begin_layout Keywords
+sentiment analysis, machine learning, natural language processing
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Since its rising in early 90s, the World Wide Web has been modifying the
+ way people interact.
+ Its distributed infrastructure, built upon Internet's top layers, made
+ it pervasive and an ideal tool to enable all kinds of communications services.
+ On a business perspective, new jargons were created trying to categorize
+ such virtual interactions, such as Business-to-Consumer, Business-to-Bussiness,
+ and Customer-to-Customer 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "B2B"
+literal "true"
+
+\end_inset
+
+.
+ Social networks are also an example of interaction.
+ Facebook, Twitter or Instagram are well known interactive platforms which
+ enable users express their opinions.
+ 
+\end_layout
+
+\begin_layout Standard
+Being able to process and extract useful information from this rich source
+ became valuable in many different aspects and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "part"
+literal "true"
+
+\end_inset
+
+ provides a comprehensive overview.
+ Microblogging platforms become highly successful as opinion promoter and
+ Twitter is its main representative.
+ Users can publish their opinions on a variety of topics, discuss current
+ issues, complain, and express positive or negative sentiment.
+ Therefore, Twitter is a rich source of data for opinion mining and sentiment
+ analysis.
+ The value of such analysis of trends is not just for marketing.
+ For instance, 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "kavanaugh2012social"
+literal "true"
+
+\end_inset
+
+ explore the use of traditional social media content, such as Twitter, Facebook,
+ Flickr, and YouTube, to detect, in real time, spikes in activity related
+ to issues concerning public safety.
+ Analyzing information from multiple social media sources should be possible
+ to identify convergence situations.
+ This can be useful, for instance, to treat crisis situations, such as traffic
+ issues, or more critical ones, like earthquakes.
+ They developed tools like the tag cloud, which helps to identify the most
+ frequent term in a large collection.
+ Tag clouds, as the one in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+Figure~
+\backslash
+ref{fig:cloud_tag}
+\end_layout
+
+\end_inset
+
+, help the visualization of the 
+\begin_inset Quotes eld
+\end_inset
+
+big picture
+\begin_inset Quotes erd
+\end_inset
+
+ of social media activity.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h]
+\backslash
+centering
+\backslash
+includegraphics[width=3.65in]{cloud_tag}
+\backslash
+caption{An example of a tag cloud.} 
+\backslash
+label{fig:cloud_tag} 
+\backslash
+end{figure} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The purpose of this work is to evaluate two machine learning algorithms,
+ Support Vector Machines (SVM) and Maximum Entropy (MaxEnt), for predicting
+ two classes of sentiment, positive or negative, in tweets using embeddings
+ as features.
+ We try different settings for creating our own custom vectors and also
+ using pre-trained ones.
+ We report the overall test accuracy and f1-score of a 5-fold cross-validation
+ training step, and also these metrics evaluated in a test set.
+ The rest of this paper is organized as follows: Related Work introduces
+ a brief review of the main techniques that have been used so far to address
+ the problem of opinion classification in general and in Twitter corpora,
+ Methods present the underlying theory behind our approach to tackle the
+ problem.
+ Results describe the experiment and discuss the values obtained.
+ Finally, Conclusion presents our final considerations.
+\end_layout
+
+\begin_layout Section
+Related Work
+\end_layout
+
+\begin_layout Subsection
+Sentiment analysis methods
+\end_layout
+
+\begin_layout Standard
+As one would expect, manual analysis of all of such prolixity through social
+ networks is difficult and time-consuming.
+ Sentiment Analysis (SA) (or Opinion Mining (OM)) have been introduced as
+ an effective way to automatically extract knowledge from comments (
+\begin_inset CommandInset citation
+LatexCommand citealp
+key "Hemmatian2017"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand citealp
+key "MEDHAT20141093"
+literal "true"
+
+\end_inset
+
+).
+ More specifically, sentiment analysis is the process of extraction sentiments
+ expressed by users in unstructured subjective texts and distinguish their
+ polarities, whether it is a positive feeling or a negative one 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Hemmatian2017"
+literal "true"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand citet
+key "MEDHAT20141093"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "sent_survey"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Hemmatian2017"
+literal "true"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "poirier"
+literal "true"
+
+\end_inset
+
+ roughly divide sentiment analysis into two groups: linguistic and machine
+ learning approaches.
+ An overall view of them can be seen in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+Figure~
+\backslash
+ref{fig:sentiment_analysis_methods}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h]
+\backslash
+centering
+\backslash
+includegraphics[width=4.5in]{sentiment_analysis_methods}
+\backslash
+caption{An overview of sentiment analysis methods.} 
+\backslash
+label{fig:sentiment_analysis_methods} 
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Linguistic-based sentiment classification
+\end_layout
+
+\begin_layout Standard
+In the research literature, opinion words are used to express desired and
+ undesired states.
+ Besides individual words, there are also opinion phrases and idioms.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Collectively, they are called 
+\emph on
+opinion lexicon
+\emph default
+ and are instrumental for opinion mining
+\begin_inset Quotes erd
+\end_inset
+
+ (
+\begin_inset CommandInset citation
+LatexCommand citealp
+key "sent_survey"
+literal "true"
+
+\end_inset
+
+,p.9).
+ Each word (or lexicon) has a polarity associated with what is just the
+ feeling assessment that the word brings to mind 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "Hemmatian2017"
+literal "true"
+
+\end_inset
+
+.
+ By studying the occurrence frequency of the word in annotated corpus of
+ texts, word's polarity can be identified.
+ If a word occurs more times among positive texts, its polarity is said
+ to be positive, if it has the same frequency, it is said to be a neutral
+ word, and if it is associated with more negative texts, it is declared
+ to be a negative word.
+ 
+\end_layout
+
+\begin_layout Standard
+There are two main strategies to find opinion words:
+\end_layout
+
+\begin_layout Itemize
+Dictionary-based: this approach starts by finding a small set of opinion
+ words with known orientation (positive, negative, neutral), the seed words.
+ Then, it grows this set by adding their synonyms and antonyms.
+ The iterative process stops when no more new words are found.
+ 
+\end_layout
+
+\begin_layout Itemize
+Corpus-based: it tries to solve the problem that the semantic orientation
+ of a word is domain-dependent and relies on the compilation of a set of
+ polar words - the most suitable for obtaining a domain-dependent opinion.
+ Its methods depend on syntactic patterns, i.e., patterns that occur together
+ along with a seed list of opinion words to find other opinion words in
+ a large corpus.
+ The technique begins with a seed list of opinion words adjectives and uses
+ them and a set of linguistic constraints on connectives (AND, OR, BUT,
+ ...) to identify additional adjective opinion words and their orientations
+ (
+\begin_inset CommandInset citation
+LatexCommand citealp
+key "MEDHAT20141093"
+literal "true"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Linguistic-based methods perform well in a variety of different scenarios.
+ Its main drawback is the necessity of an extensive pre-processing step
+ which could be expensive and time-consuming.
+ To overcome these limitations, one can use learning-based methods which
+ can by employed in a much more straightforward way.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Learning-based sentiment classification
+\end_layout
+
+\begin_layout Standard
+Learning-based approaches mostly rely on conventional machine learning algorithm
+s to solve text classification problems (
+\begin_inset CommandInset citation
+LatexCommand citealp
+key "MEDHAT20141093"
+literal "true"
+
+\end_inset
+
+).
+ Machine learning techniques can be classified as supervised and unsupervised
+ method, and, in both cases, the aim is to build a statistical model from
+ the data that can explain its behavior.
+ According to 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "sent_survey"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+any existing supervised learning methods can be applied to sentiment classificat
+ion
+\begin_inset Quotes erd
+\end_inset
+
+ (p.9).
+\end_layout
+
+\begin_layout Standard
+As usual for this class of algorithms, one of the first and foremost tasks
+ is to engineer an effective set of features.
+ The TF-IDF
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Term Frequency-Inverted Document Frequency
+\end_layout
+
+\end_inset
+
+ scheme is widely used for this purpose and, as highlighted by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "sent_survey"
+literal "true"
+
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+These features have been shown quite effective in sentiment classification.
+\begin_inset Quotes erd
+\end_inset
+
+ (p.10).
+ A term can be an individual word, in which it receives the name of unigram,
+ or longer combinations of words, leading to the n-grams schemes.
+ Features extracted in this way are known as bag-of-words (BOW) representation
+ because it does not rely on the order of the words, but just in their frequency.
+ Despite its simplicity, high accuracy has been reported using unigram and
+ bigram as features for sentiment classification.
+ 
+\end_layout
+
+\begin_layout Standard
+The main drawbacks of the previous feature engineering approach is the lack
+ in taking into account context and the size of the feature space.
+ Recent strategies to build features from text are based on unsupervised
+ ways to learn representations.
+ Using the intuitive and simple hypothesis that words that occur in similar
+ contexts tend to have similar meaning, led to the development of the new
+ vector semantics technique 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Jurafsky:2000:SLP:555733"
+literal "false"
+
+\end_inset
+
+.
+ These vectors of words embed meaningful semantic and can be used in any
+ natural language processing application that makes use of meaning.
+ In this work we explore the use of word vectors as features to the sentiment
+ classification task.
+ 
+\end_layout
+
+\begin_layout Subsection
+Sentiment classification of Twitter
+\end_layout
+
+\begin_layout Standard
+Twitter is a social networking and microblogging service that allows users
+ to post real time messages, called tweets.
+ Tweets are short messages, initially restricted to 140 characters and lately
+ increased to 280.
+ Due to the length of the messages, people use acronyms, emoticons, and
+ other characters that express special meanings.
+ Following is a brief terminology associated with tweets 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Agarwal:2011:SAT:2021109.2021114"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+Emoticons: These are facial expressions pictorially represented using punctuatio
+n and letters; they express the user’s mood.
+ 
+\end_layout
+
+\begin_layout Itemize
+Target: Users of Twitter use the “@” symbol to refer to other users on the
+ microblog.
+ Referring to other users in this manner automatically alerts them.
+ 
+\end_layout
+
+\begin_layout Itemize
+Hashtags: Users usually use hashtags to mark topics.
+ This is primarily done to increase the visibility of their tweets.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand citet
+key "lee"
+literal "false"
+
+\end_inset
+
+provided a pioneering paper of how to apply machine learning methods such
+ as Naive Bayes, Support Vector Machine and Maximum Entropy on the text
+ classification problem.
+ They used bag-of-words with unigram, bigram and part of speech as features.
+ They concluded that using unigrams as features perform well in both classifiers
+ and that SVM had the best performance in all scenarios.
+ One of the early results on sentiment analysis of Twitter data is by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "AlecGo2009"
+literal "false"
+
+\end_inset
+
+.
+ They used an approach called distant learning and rely on the polarity
+ of the last emoticon in the tweet to label them as positive or negative.
+ They built models using Naive Bayes, Maximum Entropy and Support Vector
+ Machines, and report that SVM with unigram features outperforms other classifie
+rs with 71.35% accuracy.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Agarwal:2011:SAT:2021109.2021114"
+literal "false"
+
+\end_inset
+
+ do an extensive work designing features, based on a dictionary of emoticons
+ and acronyms, and then they compare three models: unigram, 100 senti-features,
+ and tree kernel model.
+ They got a slightly better performance in the kernel (74%) and 75.4% mixing
+ unigram + senti-features.
+ It is worth noting that the senti-features performed almost as well as
+ the unigram baseline (71.27%), which has about 13,000 features.
+ A more recent result is 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "TwitterSentimentAnalysisWordEmbeddings"
+literal "false"
+
+\end_inset
+
+ where the authors explore the use of a pre-trained word embedding model
+ over 400 million tweets to extract the features of automatic labeled Twitter
+ corpora and train a neural network for classification.
+ They report much higher accuracy (roughly 85%) in a confused train/test
+ methodology where they inadvertently use the same dataset twice.
+ 
+\end_layout
+
+\begin_layout Section
+The Experiment
+\end_layout
+
+\begin_layout Standard
+The objective of this work is to compare the performance of two machine
+ learning algorithms - Maximum Entropy and Support Vector Machine - in predictin
+g the overall sentiment implicit in tweets using word vectors as features.
+ The baseline is a Maximum Entropy model trained over a unigram and bigram
+ set of bag-of-words features.
+ The following sections depict some of these concepts and detail the whole
+ experiment.
+ 
+\end_layout
+
+\begin_layout Subsection
+Dataset
+\end_layout
+
+\begin_layout Standard
+We carefully selected a set of publicly available datasets to use in the
+ experiment.
+ Our main concern in this regards was in to find reliable datasets for training
+ the classification algorithms.
+ As we have not found one single large high quality file, our final dataset
+ is a concatenation of five human annotated datasets.
+ In resume, our datasets scheme is: 
+\end_layout
+
+\begin_layout Itemize
+A set of 1.6 million tweets to be used in the creation of our custom embedding.
+ It is known as Stanford Twitter Sentiment or Sentiment140 and was created
+ by Alec Go, Richa Bhayani, and Lei Huang, who were Computer Science graduate
+ students at Stanford University 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "AlecGo2009"
+literal "false"
+
+\end_inset
+
+.
+ The sentiment of each tweet is automatically labeled (positive or negative)
+ as opposed as having humans manual annotate.
+ We considered that for the task of creating the embedding, in which the
+ importance is having a large corpus that can represent the idiosyncrasies
+ of some domain, it would be useful, but we do not rely on it to train and
+ test the classifiers as automatic sentiment annotation of tweets using
+ emoticons has an arguable accuracy.
+ 
+\end_layout
+
+\begin_layout Itemize
+For training we select only hand annotated datasets from five different
+ sources, four of them listed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "oro40660"
+literal "false"
+
+\end_inset
+
+, and one from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Tromp:2011:SMS:2117693.2119570"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Table 1 displays the distribution of tweets in the five selected datasets
+ according to their sentiment labels.
+ We can note that in the end we get a balanced dataset of 40000 examples
+ of binary human labeled tweets sentiments.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Overview of the manually labeled datasets
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dataset
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+#tweets
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+#positives
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+#neutral
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+#negative
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HCR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2516
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+541
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+470
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1381
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sanders
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5513
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+570
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2503
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+654
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SemEval
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+34183
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15543
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6440
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+12290
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OMD
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3238
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+710
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1196
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Tromp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11778
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3458
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4706
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3614
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+57228
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20732
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14119
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19135
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Featute Extraction
+\end_layout
+
+\begin_layout Standard
+In this section we show an overview of the feature representation techniques
+ we use for the different models.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{itemize}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item Bog-of-words (BOW): This is the most common approach to extract features
+ from text.
+ The idea is to represent each doument as a (sparse) vector where each cell
+ counts the number of times a particular word has occured in the text.
+ BOW does not consider the order of words and it is often used with n-gram
+ model.
+ Just counting the number of times a word occured usualy is not enough because
+ these raw frequences do not correspond to the actual importance of the
+ word.
+ To overcome this issue, the frequencies are weighted using the TF-IDF scheme.
+ TF-IDF helps to find more discriminative words in a corpus.
+ It depends on the frequency of a word in a document and its frequency in
+ all the corpora.
+ TF-IDF is calculated as follows:
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{equation} 
+\backslash
+nonumber tf
+\backslash
+textit{-}idf(t,d,D)= tf(t,d) 
+\backslash
+times idf(t) 
+\backslash
+end{equation} 
+\backslash
+begin{equation} 
+\backslash
+nonumber idf(t)= 
+\backslash
+log {
+\backslash
+frac{n_d}{1+df(d,t)}} 
+\backslash
+end{equation}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item Word Semantic Vectors: word vectors, Word2Vec, word embedding are all
+ designations of how has been known the recent supervised learning technique
+ to learn distributed represenation of words 
+\backslash
+cite{Mikolov:2013:DRW:2999792.2999959}.
+ The skip-gram with negative sampling model encompasses the following ideas:
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{itemize}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item Given an input word, training a two layer neural network to predict
+ the probability of all other words in the vocabulary be in the vicinity
+ of this word.
+ The input layer is a one-hot vector with the size of the vocabulary and
+ a one in the position of the input word and zero in every other position.
+ The hidden layer has 300 neurons with a identity transfer function, and
+ the output is a softmax layer also with the size of the vocabulary.
+ Given a window size which defines the vicinity, for every sentence in the
+ corpus where the input word occurs, a randomely chosen output word is selected
+ from the vicinity.
+ This will be the target label for this trail which means that the neural
+ net will learn that the input and output words are somehow related and
+ not all the others.
+ A scheme of this can be seen in Figure~
+\backslash
+ref{fig:skip_gram_network} 
+\backslash
+footnote{From McCormick, C.
+ (2016, April 19).
+ Word2Vec Tutorial - The Skip-Gram Model.
+ Retrieved from http://www.mccormickml.com}.
+ At the end of the training, the hidden layer will be the word vector because
+ one way for the network to output similar context predictions for these
+ two words is if the word vectors are similar.
+ So, if two words have similar contexts, then the network is motivated to
+ learn similar word vectors for these two words.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item From the previous explanation is easy to infer that this neural network
+ has a huge number of parameters because it is defined in function of the
+ size of the vocabulary.
+ Occurs that very frequent words, like 
+\begin_inset Quotes eld
+\end_inset
+
+the
+\begin_inset Quotes erd
+\end_inset
+
+, do not bring useful information about the context and just overload the
+ learning proccess.
+ Word2Vec implements a subsampling mechanism to address this issue, and
+ prune those words from the training.
+ This helps in improving the quality of the representations and decrease
+ the computanional cost.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item The 300 hidden neurons are fully conected with the vocabulary size
+ output layer, which means update a huge number of weights in a billions
+ of training examples.
+ Negative sampling addresses this by having each training sample only modifying
+ a small percentage of the weights, rather than all of them.
+ Besides the weights of the output word, instead of update all the others,
+ the method randomly select just a small number of negative words to update
+ the weights.
+ Thus, a negative word is one for which we want the network output a 0.
+ This reduce the cost for training drastically.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{itemize}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{itemize}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To create our custom word embedding, we use the Gensim package.
+ We choose 200 for the size of the vector and use five words as the window,
+ given that, in average, a tweet has 50 words.
+ 
+\end_layout
+
+\begin_layout Standard
+We also test using pre-trained word vectors from the Glove
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://nlp.stanford.edu/projects/glove/
+\end_layout
+
+\end_inset
+
+ project.
+ Specifically, we use their 200 size word vectors trained on a Twitter corpus
+ encompassing 2 billions tweets, 27 billions tokens, and 1.2 millions words
+ vocabulary size.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h]
+\backslash
+centering
+\backslash
+includegraphics[width=4.5in]{skip_gram_network}
+\backslash
+caption{Skip-gram network.} 
+\backslash
+label{fig:skip_gram_network} 
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Classifiers
+\end_layout
+
+\begin_layout Standard
+Follow a brief description of the algorithms we are using to fit a classificatio
+n model.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{itemize}
+\backslash
+item{
+\backslash
+bf Support Vector Machines (SVM):} This algorithm finds a hyperplane that
+ separates comments  according to the opinion expressed in them.
+ The separation, or margin, is as large as possible.
+ The algorithm returns a decision function $h(d)$, so that the probability
+ of an opinion $s$ given a comment $d$ is given as:  
+\backslash
+begin{equation} 
+\backslash
+nonumber p(s|d)=
+\backslash
+displaystyle
+\backslash
+frac{1}{1+e^{ah(d)+b}}.
+ 
+\backslash
+end{equation} 
+\backslash
+noindent where $a$ and $b$ are estimated by minimizing the negative log-likeliho
+od function in $
+\backslash
+mathcal{D}$.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+item{
+\backslash
+bf Maximum Entropy (MaxEnt):} This is one of the most used models in a wide
+ range of applications.
+ MaxEnt follows this equation to find the probability of the output, given
+ a certain input: 
+\backslash
+begin{equation} P_{ME}(c|d,
+\backslash
+lambda ) = 
+\backslash
+frac{
+\backslash
+exp 
+\backslash
+left[ 
+\backslash
+sum _i{
+\backslash
+lambda _if_i(c,d)} 
+\backslash
+right] }{
+\backslash
+sum _{
+\backslash
+prime {c}}
+\backslash
+left[ 
+\backslash
+exp 
+\backslash
+sum _i{
+\backslash
+lambda _if_i(c,d)} 
+\backslash
+right] } 
+\backslash
+end{equation} 
+\backslash
+end{itemize}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Experiments
+\end_layout
+
+\begin_layout Standard
+We employ a 5-fold cross-validation for training the classifiers, and report
+ the overall accuracy and F1-score of the test.
+ Our main experiment is designed in the following way:
+\end_layout
+
+\begin_layout Itemize
+Training a logistic regression model as baseline using unigram and bigram
+ bag-of-words features.
+\end_layout
+
+\begin_layout Itemize
+Creating a custom 200 size word vectors from a 1.6 million tweets with a
+ window of five words.
+ Removed punctuation.
+ 
+\end_layout
+
+\begin_layout Itemize
+Classification using a 5-fold cross-validation training using custom word
+ vectors.
+ Removed punctuation with Gensin tokenizer.
+ 
+\end_layout
+
+\begin_layout Itemize
+Classification using a 5-fold cross-validation training using Glove word
+ vectors.
+ Preprocessing with Stanford script (kept punctuation).
+ 
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+The results of our 5-fold test are shown in Table 2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Accuracy and F1-score
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Algorithm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Feature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Acc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logistic Regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+BOW
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.726
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.775
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logistic Regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Custom Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.762
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.820
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM (C=1,linear)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Custom Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.767
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.823
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logistic Regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Glove Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.783
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.834
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM (C=1,linear)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Glove Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.783
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.834
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results are almost self-explanatory.
+ We can see the advantage of using semantic word vectors in all the scenarios.
+ We were expecting a higher accuracy when employing the Glove embeddings
+ since they were trained in a much bigger twitter corpus.
+ We were also expecting a higher accuracy from SVM but both algorithms have
+ the same performance.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+Figure~
+\backslash
+ref{fig:twitter_columbia_results}
+\end_layout
+
+\end_inset
+
+ shows that our results are similar as obtained in that work.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h]
+\backslash
+centering
+\backslash
+includegraphics[width=4.5in]{twitter_columbia_results}
+\backslash
+caption{Results of paper 
+\backslash
+cite{Agarwal:2011:SAT:2021109.2021114} for a binary classification.} 
+\backslash
+label{fig:twitter_columbia_results} 
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now show in Table 3 the results for SVM with different kernels in the
+ custom word vectors setting.
+ Again the regularization parameter C was kept in 1.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+SVM for different kernels.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Kernel
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Accuracy
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Linear
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.767
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+RBF
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.726
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Polynomial
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can see that the linear kernel gives the best result and was the one
+ reported in Table 2.
+ Trying to improve the accuracy, we computed the TF-IDF value of each word
+ and weighted with the resulting value the embedding representation of the
+ word before averaging all of them to get the final tweet vector representation.
+ The results are shown in Table 4.
+  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Results using TF-IDF.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Algorithm
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Feature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Acc
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+F1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logistic Regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Custom Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.743
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.812
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM (C=1,linear)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Custom Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.747
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.813
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logistic Regression
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Glove Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.757
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.821
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SVM (C=1,linear)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Glove Word2Vec
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.758
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.822
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can note that, interestingly enough, employing TF-IDF does not lead to
+ a better accuracy.
+ 
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+In this work we evaluated two machine learning algorithms for classifying
+ sentiment in tweets messages.
+ We used word vectors, which instantiate the linguistic idea of distributional
+ semantic, as features for the classifiers, and compare their performance
+ with the traditional approach of bag-of-words.
+ We used two different sets of word vectors, one that we trained and called
+ them custom word vectors, and word vectors from the Glove project.
+ To train the classifiers, we carefully concatenated five different manually
+ labeled twitter corpus used in previous sentiment classification experiments.
+ 
+\end_layout
+
+\begin_layout Standard
+For future experiments, we would recommend tests with higher dimensional
+ vectors, different classifiers, and ensemble techniques for improving accuracy
+ in a similar training approach as used here.
+ Also, tests with neural sequence model as Recurrent Neural Networks are
+ highly desirable as these models have been issuing the state of the art
+ accuracy in many sequence dependent tasks.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Unlike the original apa class, the apa6 class does not override whatever
+ citation style is listed in the bibliography.
+ However, for compliance with apa6, you should set the style to apacite.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "bibliography,sample"
+options "apacite"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
